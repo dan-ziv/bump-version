@@ -1,8 +1,8 @@
 app.service('User', ['$http', '$q', function ($http, $q) {
 
-    var _name = "Dan Ziv";
-    var _email = "dan.ziv@kaltura.com";
-    var _oauth_token = "3e9adbb2831794e061f87dd299aa795785f1d511";
+    var _name = "YOUR_NAME";
+    var _email = "YOUR_NAME";
+    var _oauth_token = "YOUR_ACCESS_TOKEN";
 
     this.getName = function () {
         return _name;
