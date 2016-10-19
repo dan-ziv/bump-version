@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <title>FEC Release Version Automator</title>
+    <script src="https://www.gstatic.com/firebasejs/3.4.1/firebase.js"></script>
+    <script src="libs/angular.min.js"></script>
+    <script src="libs/lodash.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/popup.css">
+    <script src="js/firebase.js"></script>
+    <script src="js/popup.js"></script>
+    <script src="js/releaseFlowManager.service.js"></script>
+    <script src="js/user.service.js"></script>
+    <script src="js/github.service.js"></script>
+    <script src="js/confluence.service.js"></script>
+    <script src="js/jira.service.js"></script>
+</head>
+<body ng-app="releaseVersion">
+<div ng-controller="ReleaseVersionController" ng-init="onPopupShown()">
+    <center>
+        <!--<img style="float: right;" height="50px" width="50px" src="icon.png">-->
+
+        <div ng-if="!dataLoaded">
+            Loading...
+        </div>
+
+        <div ng-if="dataLoaded">
+            <h3>FEC Release Version</h3>
+            <hr>
+            <h4>Current version: <b style="color: limegreen"> {{currentVersion}}</b></h4>
+            <h4>Next version: <b style="color: dodgerblue"> {{nextVersion}}</b></h4>
+            <input type="checkbox" id="isPreRelease" ng-disabled="createClicked" ng-model="preRelease"
+                   ng-change="onPreReleaseChange(preRelease)">
+            <label for="isPreRelease">This is a pre-release</label>
+            <br><br>
+            <center>
+                <div ng-if="!createClicked && !jobDone && !jobFailed">
+                    <button id="createVersionBtn" ng-click="onCreateVersionClicked()">Create New Version</button>
+                </div>
+                <div ng-if="createClicked && !jobDone && !jobFailed">
+                    Processing...
+                </div>
+                <div ng-if="jobDone">
+                    It's all done!
+                </div>
+                <div ng-if="jobFailed">
+                    Something went wrong, please try again later.
+                </div>
+            </center>
+        </div>
+    </center>
+</div>
+</body>
+</html>
