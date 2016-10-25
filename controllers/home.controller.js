@@ -2,6 +2,7 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'Gi
     function ($scope, $timeout, $location, User, GitHub) {
 
         var _auto, _prerelease;
+        $scope.loadingPage = true;
 
         (function () {
             firebase.database().ref('/version').once('value')
@@ -12,6 +13,7 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'Gi
                         $scope.currentVersion = snapshot.val();
                         $scope.repo = GitHub.getRepoName();
                         $scope.onPreReleaseChange();
+                        $scope.loadingPage = false;
                     }, 0);
                 });
         })();

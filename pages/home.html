@@ -1,19 +1,26 @@
-<div>
-    <center>
-        <p class="md-body-2"><b>Repository: </b>{{repo}}</p>
-        <p class="md-body-2"><b> Current version: </b>{{currentVersion}}</p>
-        <p class="md-body-2"><b>Next version: </b><span style="color: red"> {{nextVersion}}</span></p>
-        <md-checkbox class="md-body-2" style="font-style: italic;" ng-model="prerelease"
-                     ng-change="onPreReleaseChange(prerelease)">
-            This is a pre-release
-        </md-checkbox>
-        <br>
-        <md-button class="md-raised md-primary" ng-click="onCreateVersionClicked()">Create Release
-        </md-button>
-        <br><br>
-        <md-checkbox class="md-body-2" ng-model="auto"
-                     ng-change="onAutoChange(auto)">
-            Auto
-        </md-checkbox>
-    </center>
+<div ng-if="loadingPage">
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
+
+<div ng-if="!loadingPage">
+    <div>
+        <center>
+            <p class="md-body-2"><b>Repository: </b>{{repo}}</p>
+            <p class="md-body-2"><b> Current version: </b>{{currentVersion}}</p>
+            <p class="md-body-2"><b>Next version: </b><span style="color: red"> {{nextVersion}}</span></p>
+            <md-checkbox class="md-body-2" style="font-style: italic;" ng-model="prerelease"
+                         ng-change="onPreReleaseChange(prerelease)">
+                This is a pre-release
+            </md-checkbox>
+            <br>
+            <md-button class="md-raised md-primary" ng-click="onCreateVersionClicked()">Create Release
+            </md-button>
+            <br><br>
+            <md-checkbox class="md-body-2" ng-model="auto"
+                         ng-change="onAutoChange(auto)">Auto
+            </md-checkbox>
+        </center>
+    </div>
 </div>
