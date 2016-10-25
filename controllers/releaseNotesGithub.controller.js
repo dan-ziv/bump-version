@@ -6,7 +6,6 @@ app.controller('releaseNotesGithubController', ['$scope', '$location', '$timeout
         $scope.inCreateNotesProcess = false;
         $scope.title = 'v' + $routeParams.newVersion;
 
-        debugger;
         (function () {
             GitHub.getCommitsAsTitles()
                 .then(function (commits) {
@@ -23,6 +22,7 @@ app.controller('releaseNotesGithubController', ['$scope', '$location', '$timeout
                     .then(function (release) {
                         if (release) {
                             $scope.btnTxt = "Next";
+                            $scope.link = release.html_url;
                             $scope.inCreateNotesProcess = false;
                         }
                     });

@@ -6,7 +6,6 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeP
         $scope.inTagProcess = false;
         $scope.tag = 'v' + $routeParams.newVersion;
 
-        debugger;
         (function () {
             GitHub.getCurrentBranch($routeParams.currentVersion)
                 .then(function (branch) {

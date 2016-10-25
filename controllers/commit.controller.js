@@ -6,7 +6,6 @@ app.controller('commitController', ['$scope', '$location', '$timeout', '$routePa
         $scope.inCommitProcess = false;
         $scope.line = 'v' + $routeParams.newVersion;
 
-        debugger;
         (function () {
             GitHub.getCurrentBranch($routeParams.currentVersion)
                 .then(function (branch) {

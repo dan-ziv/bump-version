@@ -64,7 +64,6 @@ app.service('Confluence', ['$http', '$q', function ($http, $q) {
     }
 
     function _createPage(parent, version) {
-        debugger;
         var deferred = $q.defer();
 
         $http.post("https://kaltura.atlassian.net/wiki/rest/api/content", {
@@ -84,10 +83,8 @@ app.service('Confluence', ['$http', '$q', function ($http, $q) {
                 }
             }
         }).then(function (response) {
-            debugger;
             deferred.resolve(response.data);
         }).catch(function (e) {
-            debugger;
             deferred.resolve(null);
         });
 

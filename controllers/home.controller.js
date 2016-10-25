@@ -45,7 +45,6 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'Gi
         };
 
         $scope.onCreateVersionClicked = function () {
-            debugger;
             if (_auto) {
                 $location.path('/all-in-one').search({
                     currentVersion: $scope.currentVersion,
