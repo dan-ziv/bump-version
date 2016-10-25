@@ -1,29 +1,31 @@
-// Initialize Angular
-var app = angular.module('releaseVersion', []);
+app.controller('homeController', ['$scope', '$timeout', '$location', 'User',
+    function ($scope, $timeout, $location, User) {
 
-app.controller('ReleaseVersionController', ['$scope', '$timeout', 'ReleaseFlowManager',
-    function ($scope, $timeout, ReleaseFlowManager) {
+        var _reviewSteps, _prerelease;
 
-        $scope.onPopupShown = function () {
-            $scope.dataLoaded = false;
-            return firebase.database().ref('/version').once('value')
+        (function () {
+            firebase.database().ref('/version').once('value')
                 .then(function (snapshot) {
                     $timeout(function () {
+                        $scope.control.isAuthenticated = true;
+                        $scope.control.user = {name: User.getName(), avatar: User.getAvatar()};
                         $scope.currentVersion = snapshot.val();
                         $scope.onPreReleaseChange();
-                        $scope.createClicked = false;
-                        $scope.dataLoaded = true;
                     }, 0);
                 });
+        })();
+
+        $scope.onReviewStepsChange = function (reviewSteps) {
+            _reviewSteps = reviewSteps;
         };
 
         $scope.onPreReleaseChange = function (prerelease) {
-            $scope.prerelease = prerelease;
+            _prerelease = prerelease;
             var currentVersion = $scope.currentVersion;
             var parts = currentVersion.split('.');
             var nextNum = parts[1];
             var nextRc = parts[2];
-            if (prerelease) {
+            if (_prerelease) {
                 if (nextRc) {
                     var rcParts = nextRc.split('rc');
                     var nextRcVersion = rcParts[1];
@@ -42,10 +44,19 @@ app.controller('ReleaseVersionController', ['$scope', '$timeout', 'ReleaseFlowMa
         };
 
         $scope.onCreateVersionClicked = function () {
-            $timeout(function () {
-                $scope.createClicked = true;
-            }, 0);
-
-            ReleaseFlowManager.releaseVersion($scope.currentVersion, $scope.nextVersion, $scope.prerelease);
+            if (_reviewSteps) {
+                $location.path('/commit').search({
+                    currentVersion: $scope.currentVersion,
+                    newVersion: $scope.nextVersion,
+                    prerelease: _prerelease
+                });
+            }
+            else {
+                $location.path('/all-in-one').search({
+                    currentVersion: $scope.currentVersion,
+                    newVersion: $scope.nextVersion,
+                    prerelease: _prerelease
+                });
+            }
         };
     }]);

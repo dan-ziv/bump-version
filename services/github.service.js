@@ -1,16 +1,48 @@
 app.service('Github', ['$http', '$q', 'User', function ($http, $q, User) {
 
-    //TODO: In all requests - the correct branch
-    //TODO: Change it to kaltura mwEmbed repo
     var _apiPrefix = 'https://api.github.com';
-    // var _owner = "fecbot";
-    var _owner = "kaltura";
-    // var _repo = "fec-testing";
-    var _repo = "mwEmbed";
-    var _branch;
-    var _defaultSettingsFilePath = 'includes/DefaultSettings.php';
-    // var _defaultSettingsFilePath = 'DefaultSettings.php';
+    var _owner = "fecbot";
+    // var _owner = "kaltura";
+    var _repo = "fec-testing";
+    // var _repo = "mwEmbed";
+    var _branch = null;
+    var _branches = [];
+    // var _defaultSettingsFilePath = 'includes/DefaultSettings.php';
+    var _defaultSettingsFilePath = 'DefaultSettings.php';
     var _statuses = ["CLOSED", "READY FOR QA", "DEPLOYED"];
+
+    this.getFilePath = function () {
+        return _defaultSettingsFilePath;
+    };
+
+    this.getCurrentBranch = function (currentVersion) {
+        return _getCurrentBranch(currentVersion, 1);
+    };
+
+    this.tagRepository = function (newVersion) {
+        return _tagRepository(newVersion);
+    };
+
+    this.commitFile = function (currentVersion, newVersion) {
+        return _updateFile(currentVersion, newVersion);
+    };
+
+    this.getAllBranches = function (from) {
+        var that = this;
+        return _doListBranches(from)
+            .then(function (branches) {
+                if (branches.length > 0) {
+                    for (var i = 0; i < branches.length; i++) {
+                        var branch = branches[i];
+                        _branches.push(branch.name);
+                    }
+                    return that.getAllBranches(from + 1);
+                }
+                else {
+                    return _branches;
+                }
+            });
+    };
 
     this.commitAndTagVersion = function (currentVersion, newVersion) {
         return _getCurrentBranch(currentVersion, 1)
@@ -29,7 +61,6 @@ app.service('Github', ['$http', '$q', 'User', function ($http, $q, User) {
     };
 
     this.createReleaseNotes = function (tag, titles, prerelease) {
-        // TODO: check if there's customer name
         var body = "";
         for (var i = 0; i < titles.length; i++) {
             var title = titles[i];
@@ -61,7 +92,7 @@ app.service('Github', ['$http', '$q', 'User', function ($http, $q, User) {
         var branchPrefix = splitVersion[0] + '.' + splitVersion[1];
         return _doListBranches(page)
             .then(function (branches) {
-                if (branches) {
+                if (branches.length > 0) {
                     for (var i = 0; i < branches.length; i++) {
                         var branch = branches[i];
                         if (branch.name.startsWith(branchPrefix)) {
@@ -173,10 +204,10 @@ app.service('Github', ['$http', '$q', 'User', function ($http, $q, User) {
             "message": "Bump version to " + nextVersion,
             "content": contents.content,
             "sha": contents.sha,
-            "committer": {
-                "name": User.getName(),
-                "email": User.getEmail()
-            },
+            // "committer": {
+            //     "name": User.getName(),
+            //     "email": User.getEmail()
+            // },
             "branch": _branch
         }).then(function (response) {
             // Update current version to db
@@ -232,10 +263,10 @@ app.service('Github', ['$http', '$q', 'User', function ($http, $q, User) {
             "message": "v" + tagVersion,
             "object": sha,
             "type": "commit",
-            "tagger": {
-                "name": User.getName(),
-                "email": User.getEmail()
-            }
+            // "tagger": {
+            //     "name": User.getName(),
+            //     "email": User.getEmail()
+            // }
         }).then(function (response) {
             deferred.resolve(response.data);
         }).catch(function (e) {

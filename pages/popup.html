@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <title>Bump Version!</title>
+    <!--css-->
+    <link rel="stylesheet" type="text/css" href="../css/popup.css">
+    <link rel="stylesheet" href="../libs/angular-material.css">
+    <!--js-->
+    <script src="https://www.gstatic.com/firebasejs/3.4.1/firebase.js"></script>
+    <script src="../libs/angular.min.js"></script>
+    <script src="../libs/angular-route.min.js"></script>
+    <script src="../libs/angular-aria.js"></script>
+    <script src="../libs/angular-animate.js"></script>
+    <script src="../libs/angular-material.js"></script>
+    <script src="../libs/lodash.min.js"></script>
+    <script src="../js/firebase.js"></script>
+    <!--controllers-->
+    <script src="../controllers/popup.controller.js"></script>
+    <script src="../controllers/signin.controller.js"></script>
+    <script src="../controllers/home.controller.js"></script>
+    <script src="../controllers/commit.controller.js"></script>
+    <script src="../controllers/tagrepo.controller.js"></script>
+    <script src="../controllers/allinone.controller.js"></script>
+    <!--services-->
+    <script src="../services/user.service.js"></script>
+    <script src="../services/github.service.js"></script>
+    <script src="../services/confluence.service.js"></script>
+    <script src="../services/jira.service.js"></script>
+</head>
+<body ng-app="releaseVersion">
+<div ng-controller="popupController" ng-init="onPopupShown()">
+    <md-card>
+        <md-content>
+            <center>
+                <span class="md-headline" style="color:dodgerblue">Bump</span>
+                <span class="md-subhead" style="color: limegreen">Version!</span>
+                <div ng-if="control.isAuthenticated">
+                    <img class="circle" ng-src="{{control.user.avatar}}"/><br>
+                    <span class="md-title">{{control.user.name}}</span>
+                </div>
+                <hr>
+            </center>
+
+            <div ng-view></div>
+
+        </md-content>
+    </md-card>
+</div>
+</body>
+</html>

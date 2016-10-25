@@ -1,16 +1,19 @@
 {
   "manifest_version": 2,
-  "name": "Kaltura Release Version Automator",
+  "name": "Bump Version!",
   "description": "This extension automate the release version flow for the Front End Core team",
   "version": "1.0",
   "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
+    "default_icon": "icons/bump-version-icon.png",
+    "default_popup": "pages/popup.html"
   },
   "permissions": [
+    "identity",
     "activeTab",
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "https://github.com/",
+    "tabs"
   ],
-  "content_security_policy":"script-src 'self' https://*.firebaseio.com https://www.gstatic.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://*.firebaseio.com https://www.gstatic.com; object-src 'self'"
 }

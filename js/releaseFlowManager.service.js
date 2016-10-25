@@ -1,6 +1,16 @@
 app.service('ReleaseFlowManager', ['$http', '$q', 'Jira', 'Confluence', 'Github', 'User',
     function ($http, $q, Jira, Confluence, Github, User) {
 
+        this.authenticate = function () {
+            return Github.setCurrentUser()
+                .then(function (githubUser) {
+                    return Confluence.setCurrentUser()
+                        .then(function (confluenceUser) {
+                            return (githubUser !== null && confluenceUser !== null);
+                        });
+                });
+        };
+
         this.releaseVersion = function (currentVersion, newVersion, prerelease) {
             var fecs;
             return Github.commitAndTagVersion(currentVersion, newVersion)

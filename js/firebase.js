@@ -1,10 +1,10 @@
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyBamY5uS4By65XGQ0x9rsSW20-mIndVf_A",
-    authDomain: "kreleaseversion.firebaseapp.com",
-    databaseURL: "https://kreleaseversion.firebaseio.com",
-    storageBucket: "kreleaseversion.appspot.com",
-    messagingSenderId: "996227326951"
+    apiKey: "AIzaSyCtHYr_OpojQyWWO4KVhlGtHGvo9iXCgo4",
+    authDomain: "bump-version.firebaseapp.com",
+    databaseURL: "https://bump-version.firebaseio.com",
+    storageBucket: "bump-version.appspot.com",
+    messagingSenderId: "599010334515"
 };
 
 firebase.initializeApp(config);

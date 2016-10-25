@@ -1,0 +1,26 @@
+<div ng-if="loadingPage">
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
+
+<div ng-if="!loadingPage">
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Tag Repository
+            </span>
+            <span class="md-subhead">Tag: {{tag}}</span>
+            <span class="md-subhead">Branch: {{branch}}</span>
+        </md-card-title-text>
+    </md-card-title>
+    <center>
+        <img ng-if="btnTxt === 'Next'" height="32px;" width="32px;" src="../icons/success.ico">
+    </center>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <md-button class="md-raised md-warn" ng-click="onTagClicked()" ng-disabled="inTagProcess">{{btnTxt}}
+        </md-button>
+    </section>
+    <div layout="row" layout-sm="column" layout-align="space-around" ng-if="inTagProcess">
+        <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+    </div>
+</div>
