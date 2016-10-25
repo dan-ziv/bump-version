@@ -9,6 +9,7 @@
         <md-card-title-text>
             <span class="md-headline">Commit to DefaultSetting.php
             </span>
+            <span class="md-subhead">Branch: {{branch}}</span>
             <span class="md-subhead">File path: {{path}}</span>
             <span class="md-subhead">Tag to commit: {{line}}</span>
         </md-card-title-text>
@@ -20,7 +21,4 @@
         <md-button class="md-raised md-warn" ng-click="onCommitClicked()" ng-disabled="inCommitProcess">{{btnTxt}}
         </md-button>
     </section>
-    <div layout="row" layout-sm="column" layout-align="space-around" ng-if="inCommitProcess">
-        <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
-    </div>
 </div>

@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div ng-if="loadingPage">
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
 
-</body>
-</html>
+<div ng-if="!loadingPage">
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Release Notes - GitHub</span>
+            <md-input-container>
+                <label>Title</label>
+                <input ng-model="title">
+            </md-input-container>
+            <md-chips ng-model="commits" readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
+        </md-card-title-text>
+    </md-card-title>
+    <center>
+        <img ng-if="btnTxt === 'Next'" height="32px;" width="32px;" src="../icons/success.ico">
+    </center>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <md-button class="md-raised md-warn" ng-click="onCreateNotesClicked()" ng-disabled="inCreateNotesProcess">
+            {{btnTxt}}
+        </md-button>
+    </section>
+</div>

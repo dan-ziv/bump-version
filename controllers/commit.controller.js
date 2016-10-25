@@ -1,24 +1,32 @@
-app.controller('commitController', ['$scope', '$location', '$timeout', '$routeParams', 'Github',
-    function ($scope, $location, $timeout, $routeParams, Github) {
+app.controller('commitController', ['$scope', '$location', '$timeout', '$routeParams', 'GitHub',
+    function ($scope, $location, $timeout, $routeParams, GitHub) {
 
         $scope.btnTxt = "Commit";
         $scope.loadingPage = true;
         $scope.inCommitProcess = false;
         $scope.line = 'v' + $routeParams.newVersion;
 
+        debugger;
         (function () {
-            $scope.path = Github.getFilePath();
-            $scope.loadingPage = false;
+            GitHub.getCurrentBranch($routeParams.currentVersion)
+                .then(function (branch) {
+                    $scope.branch = branch;
+                    $scope.path = GitHub.getFilePath();
+                    $scope.loadingPage = false;
+                });
         })();
 
         $scope.onCommitClicked = function () {
             if ($scope.btnTxt === "Commit") {
                 $scope.btnTxt = "Committing...";
                 $scope.inCommitProcess = true;
-                $timeout(function () {
-                    $scope.btnTxt = "Next";
-                    $scope.inCommitProcess = false;
-                }, 2000);
+                GitHub.commitFile($routeParams.currentVersion, $routeParams.newVersion)
+                    .then(function (success) {
+                        if (success) {
+                            $scope.btnTxt = "Next";
+                            $scope.inCommitProcess = false;
+                        }
+                    });
             } else {
                 $location.path('/tag-repo');
             }

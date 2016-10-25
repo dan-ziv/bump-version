@@ -1,13 +1,14 @@
-app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeParams', 'Github',
-    function ($scope, $location, $timeout, $routeParams, Github) {
+app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeParams', 'GitHub',
+    function ($scope, $location, $timeout, $routeParams, GitHub) {
 
         $scope.btnTxt = "Tag";
         $scope.loadingPage = true;
         $scope.inTagProcess = false;
         $scope.tag = 'v' + $routeParams.newVersion;
 
+        debugger;
         (function () {
-            Github.getCurrentBranch($routeParams.currentVersion)
+            GitHub.getCurrentBranch($routeParams.currentVersion)
                 .then(function (branch) {
                     $scope.branch = branch;
                     $scope.loadingPage = false;
@@ -18,10 +19,13 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeP
             if ($scope.btnTxt === "Tag") {
                 $scope.btnTxt = "Tagging...";
                 $scope.inTagProcess = true;
-                $timeout(function () {
-                    $scope.btnTxt = "Next";
-                    $scope.inTagProcess = false;
-                }, 2000);
+                GitHub.tagRepository($routeParams.newVersion)
+                    .then(function (success) {
+                        if (success) {
+                            $scope.btnTxt = "Next";
+                            $scope.inTagProcess = false;
+                        }
+                    });
             } else {
                 $location.path('/release-notes-github');
             }

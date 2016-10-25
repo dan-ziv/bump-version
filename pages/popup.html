@@ -16,11 +16,12 @@
     <script src="../js/firebase.js"></script>
     <!--controllers-->
     <script src="../controllers/popup.controller.js"></script>
-    <script src="../controllers/signin.controller.js"></script>
+    <script src="../controllers/signIn.controller.js"></script>
     <script src="../controllers/home.controller.js"></script>
     <script src="../controllers/commit.controller.js"></script>
-    <script src="../controllers/tagrepo.controller.js"></script>
-    <script src="../controllers/allinone.controller.js"></script>
+    <script src="../controllers/tagRepo.controller.js"></script>
+    <script src="../controllers/releaseNotesGithub.controller.js"></script>
+    <script src="../controllers/allInOne.controller.js"></script>
     <!--services-->
     <script src="../services/user.service.js"></script>
     <script src="../services/github.service.js"></script>
@@ -28,23 +29,21 @@
     <script src="../services/jira.service.js"></script>
 </head>
 <body ng-app="releaseVersion">
-<div ng-controller="popupController" ng-init="onPopupShown()">
-    <md-card>
-        <md-content>
-            <center>
-                <span class="md-headline" style="color:dodgerblue">Bump</span>
-                <span class="md-subhead" style="color: limegreen">Version!</span>
-                <div ng-if="control.isAuthenticated">
-                    <img class="circle" ng-src="{{control.user.avatar}}"/><br>
-                    <span class="md-title">{{control.user.name}}</span>
-                </div>
-                <hr>
-            </center>
+<md-card ng-controller="popupController" ng-init="onPopupShown()">
+    <md-content>
+        <center>
+            <span class="md-headline" style="color:dodgerblue">Bump</span>
+            <span class="md-subhead" style="color: limegreen">Version!</span>
+            <div ng-if="control.isAuthenticated">
+                <img class="circle" ng-src="{{control.user.avatar}}"/><br>
+                <span class="md-title">{{control.user.name}}</span>
+            </div>
+            <hr>
+        </center>
 
-            <div ng-view></div>
+        <div ng-view></div>
 
-        </md-content>
-    </md-card>
-</div>
+    </md-content>
+</md-card>
 </body>
 </html>

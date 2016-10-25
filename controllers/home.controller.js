@@ -1,7 +1,7 @@
-app.controller('homeController', ['$scope', '$timeout', '$location', 'User',
-    function ($scope, $timeout, $location, User) {
+app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'GitHub',
+    function ($scope, $timeout, $location, User, GitHub) {
 
-        var _reviewSteps, _prerelease;
+        var _auto, _prerelease;
 
         (function () {
             firebase.database().ref('/version').once('value')
@@ -10,13 +10,14 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User',
                         $scope.control.isAuthenticated = true;
                         $scope.control.user = {name: User.getName(), avatar: User.getAvatar()};
                         $scope.currentVersion = snapshot.val();
+                        $scope.repo = GitHub.getRepoName();
                         $scope.onPreReleaseChange();
                     }, 0);
                 });
         })();
 
-        $scope.onReviewStepsChange = function (reviewSteps) {
-            _reviewSteps = reviewSteps;
+        $scope.onAutoChange = function (auto) {
+            _auto = auto;
         };
 
         $scope.onPreReleaseChange = function (prerelease) {
@@ -44,15 +45,16 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User',
         };
 
         $scope.onCreateVersionClicked = function () {
-            if (_reviewSteps) {
-                $location.path('/commit').search({
+            debugger;
+            if (_auto) {
+                $location.path('/all-in-one').search({
                     currentVersion: $scope.currentVersion,
                     newVersion: $scope.nextVersion,
                     prerelease: _prerelease
                 });
             }
             else {
-                $location.path('/all-in-one').search({
+                $location.path('/commit').search({
                     currentVersion: $scope.currentVersion,
                     newVersion: $scope.nextVersion,
                     prerelease: _prerelease
