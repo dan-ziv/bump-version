@@ -15,8 +15,11 @@
             <md-chips ng-model="commits" readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
         </md-card-title-text>
     </md-card-title>
-    <center>
-        <img ng-if="btnTxt === 'Next'" height="32px;" width="32px;" src="../icons/success.ico">
+    <center ng-if="btnTxt === 'Next'">
+        <img height="32px;" width="32px;" src="../icons/success.ico">
+        <p>You can find your release notes here:</p>
+        <a ng-href="{{html_url}}">{{html_url}}</a>
+        <br>
     </center>
     <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
         <md-button class="md-raised md-warn" ng-click="onCreateNotesClicked()" ng-disabled="inCreateNotesProcess">

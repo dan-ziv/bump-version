@@ -22,7 +22,7 @@ app.controller('releaseNotesGithubController', ['$scope', '$location', '$timeout
                     .then(function (release) {
                         if (release) {
                             $scope.btnTxt = "Next";
-                            $scope.link = release.html_url;
+                            $scope.html_url = release.html_url;
                             $scope.inCreateNotesProcess = false;
                         }
                     });
