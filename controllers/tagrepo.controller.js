@@ -10,6 +10,10 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeP
             GitHub.getCurrentBranch($routeParams.currentVersion)
                 .then(function (branch) {
                     $scope.branch = branch;
+                })
+                .catch(function (e) {
+                })
+                .finally(function () {
                     $scope.loadingPage = false;
                 });
         })();
@@ -19,13 +23,14 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeP
                 $scope.btnTxt = "Tagging...";
                 $scope.inTagProcess = true;
                 GitHub.tagRepository($routeParams.newVersion)
-                    .then(function (success) {
-                        if (success) {
-                            $scope.btnTxt = "Next";
-                        }
-                        else {
-                            $scope.btnTxt = "Close";
-                        }
+                    .then(function () {
+                        $scope.btnTxt = "Next";
+                    })
+                    .catch(function (e) {
+                        $scope.btnTxt = "Close";
+                        $scope.errMsg = e.data.message;
+                    })
+                    .finally(function () {
                         $scope.inTagProcess = false;
                     });
             } else if ($scope.btnTxt === "Next") {

@@ -15,8 +15,13 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
             GitHub.getCommitsByKeys()
                 .then(function (commits) {
                     $scope.notes = commits.withKeys.concat(commits.withOutKeys);
+                })
+                .catch(function (e) {
+                })
+                .finally(function () {
                     $scope.loadingPage = false;
                 });
+            ;
         })();
 
         $scope.onCreatePageClicked = function () {

@@ -11,6 +11,10 @@ app.controller('commitController', ['$scope', '$location', '$timeout', '$routePa
                 .then(function (branch) {
                     $scope.branch = branch;
                     $scope.path = GitHub.getFilePath();
+                })
+                .catch(function (e) {
+                })
+                .finally(function () {
                     $scope.loadingPage = false;
                 });
         })();
@@ -20,13 +24,14 @@ app.controller('commitController', ['$scope', '$location', '$timeout', '$routePa
                 $scope.btnTxt = "Committing...";
                 $scope.inCommitProcess = true;
                 GitHub.commitFile($routeParams.currentVersion, $routeParams.newVersion)
-                    .then(function (success) {
-                        if (success) {
-                            $scope.btnTxt = "Next";
-                        }
-                        else {
-                            $scope.btnTxt = "Close";
-                        }
+                    .then(function () {
+                        $scope.btnTxt = "Next";
+                    })
+                    .catch(function (e) {
+                        $scope.btnTxt = "Close";
+                        $scope.errMsg = e.data.message;
+                    })
+                    .finally(function () {
                         $scope.inCommitProcess = false;
                     });
             } else if ($scope.btnTxt === "Next") {

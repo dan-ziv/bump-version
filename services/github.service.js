@@ -12,6 +12,27 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
         var _defaultSettingsFilePath = 'DefaultSettings.php';
         var _statuses = ["CLOSED", "READY FOR QA", "DEPLOYED"];
 
+        this.tagRepository = function (newVersion) {
+            return _tagRepository(newVersion);
+        };
+
+        this.commitFile = function (currentVersion, newVersion) {
+            return _updateFile(currentVersion, newVersion);
+        };
+
+        this.createReleaseNotes = function (tag, titles, prerelease) {
+            var body = "";
+            for (var i = 0; i < titles.length; i++) {
+                var title = titles[i];
+                var status = _containsAnyStatus(title);
+                if (status) {
+                    title = titles.replace(status, "");
+                }
+                body += "* " + title + "\n";
+            }
+            return _doCreateReleaseNotes(tag, body, prerelease);
+        };
+
         this.getRepoName = function () {
             return _owner + '/' + _repo;
         };
@@ -19,30 +40,24 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
         this.getCommitsByKeys = function () {
             return this.getCommitsSinceLastRelease()
                 .then(function (commits) {
-                    if (commits) {
-                        return _extractFECs(commits);
-                    }
+                    return _extractFECs(commits);
                 });
         };
 
         this.getCommitsAsTitles = function () {
             return this.getCommitsSinceLastRelease()
                 .then(function (commits) {
-                    if (commits) {
-                        var fecs = _extractFECs(commits);
-                        if (fecs.withKeys.length > 0) {
-                            return Jira.getIssues(fecs.withKeys)
-                                .then(function (jiras) {
-                                    var titles = _extractTitles(jiras);
-                                    titles = titles.concat(fecs.withOutKeys);
-                                    return titles;
-                                });
-                        }
-                        else {
-                            return fecs.withOutKeys;
-                        }
-                    } else {
-                        return [];
+                    var fecs = _extractFECs(commits);
+                    if (fecs.withKeys.length > 0) {
+                        return Jira.getIssues(fecs.withKeys)
+                            .then(function (jiras) {
+                                var titles = _extractTitles(jiras);
+                                titles = titles.concat(fecs.withOutKeys);
+                                return titles;
+                            });
+                    }
+                    else {
+                        return fecs.withOutKeys;
                     }
                 });
         };
@@ -57,14 +72,6 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                     _branch = branchName || 'master';
                     return _branch;
                 });
-        };
-
-        this.tagRepository = function (newVersion) {
-            return _tagRepository(newVersion);
-        };
-
-        this.commitFile = function (currentVersion, newVersion) {
-            return _updateFile(currentVersion, newVersion);
         };
 
         this.getAllBranches = function (from) {
@@ -89,28 +96,10 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                 .then(function (branchName) {
                     _branch = branchName || 'master';
                     return _updateFile(currentVersion, newVersion)
-                        .then(function (success) {
-                            if (success) {
-                                return _tagRepository(newVersion);
-                            }
-                            else {
-                                return false;
-                            }
+                        .then(function () {
+                            return _tagRepository(newVersion);
                         });
                 });
-        };
-
-        this.createReleaseNotes = function (tag, titles, prerelease) {
-            var body = "";
-            for (var i = 0; i < titles.length; i++) {
-                var title = titles[i];
-                var status = _containsAnyStatus(title);
-                if (status) {
-                    title = titles.replace(status, "");
-                }
-                body += "* " + title + "\n";
-            }
-            return _doCreateReleaseNotes(tag, body, prerelease);
         };
 
         this.getCommitsSinceLastRelease = function () {
@@ -123,7 +112,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                             return commits.slice(1, i);
                         }
                     }
-                    return null;
+                    return [];
                 });
         };
 
@@ -188,7 +177,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                     deferred.resolve(response.data);
                 })
                 .catch(function (e) {
-                    deferred.resolve(null);
+                    deferred.reject(e);
                 });
 
             return deferred.promise;
@@ -217,7 +206,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             }).then(function (response) {
                 deferred.resolve(response.data);
             }).catch(function (e) {
-                deferred.resolve(null);
+                deferred.reject(e);
             });
 
             return deferred.promise;
@@ -231,7 +220,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                     deferred.resolve(response.data);
                 })
                 .catch(function (e) {
-                    deferred.resolve(null);
+                    deferred.reject(e);
                 });
 
             return deferred.promise;
@@ -240,18 +229,11 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
         function _updateFile(currentVersion, newVersion) {
             return _doGetFileContents()
                 .then(function (contents) {
-                    if (contents) {
-                        // Change the version in the file
-                        var oldMwEmbedVersion = "$wgMwEmbedVersion = '" + currentVersion + "'";
-                        var newMwEmbedVersion = "$wgMwEmbedVersion = '" + newVersion + "'";
-                        contents.content = btoa(contents.content.replace(oldMwEmbedVersion, newMwEmbedVersion));
-                        return _doCommitFile(contents, newVersion)
-                            .then(function (response) {
-                                if (response) {
-                                    return true;
-                                }
-                            });
-                    }
+                    // Change the version in the file
+                    var oldMwEmbedVersion = "$wgMwEmbedVersion = '" + currentVersion + "'";
+                    var newMwEmbedVersion = "$wgMwEmbedVersion = '" + newVersion + "'";
+                    contents.content = btoa(contents.content.replace(oldMwEmbedVersion, newMwEmbedVersion));
+                    return _doCommitFile(contents, newVersion);
                 });
         }
 
@@ -263,7 +245,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                     deferred.resolve({sha: response.data.sha, content: atob(response.data.content)});
                 })
                 .catch(function (e) {
-                    deferred.resolve(null);
+                    deferred.reject(e);
                 });
 
             return deferred.promise;
@@ -285,7 +267,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                         deferred.resolve(response.data);
                     });
             }).catch(function (e) {
-                deferred.resolve(null);
+                deferred.reject(e);
             });
 
             return deferred.promise;
@@ -294,19 +276,10 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
         function _tagRepository(tagVersion) {
             return _doGetReference()
                 .then(function (response) {
-                    if (response) {
-                        return _doCreateTag(response.object.sha, tagVersion)
-                            .then(function (response) {
-                                if (response) {
-                                    return _doCreateReference(response.sha, response.tag)
-                                        .then(function (response) {
-                                            if (response) {
-                                                return true;
-                                            }
-                                        });
-                                }
-                            });
-                    }
+                    return _doCreateTag(response.object.sha, tagVersion)
+                        .then(function (response) {
+                            return _doCreateReference(response.sha, response.tag);
+                        });
                 });
         }
 
@@ -318,7 +291,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                     deferred.resolve(response.data);
                 })
                 .catch(function (e) {
-                    deferred.resolve(null);
+                    deferred.reject(e);
                 });
 
             return deferred.promise;
@@ -335,7 +308,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             }).then(function (response) {
                 deferred.resolve(response.data);
             }).catch(function (e) {
-                deferred.resolve(null);
+                deferred.reject(e);
             });
 
             return deferred.promise;
@@ -350,7 +323,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             }).then(function (response) {
                 deferred.resolve(response.data);
             }).catch(function (e) {
-                deferred.resolve(null);
+                deferred.reject(e);
             });
 
             return deferred.promise;

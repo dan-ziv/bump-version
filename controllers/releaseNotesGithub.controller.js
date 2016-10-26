@@ -10,6 +10,11 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
             GitHub.getCommitsAsTitles()
                 .then(function (commits) {
                     $scope.commits = commits;
+                })
+                .catch(function (e) {
+
+                })
+                .finally(function () {
                     $scope.loadingPage = false;
                 });
         })();
@@ -20,12 +25,14 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
                 $scope.inCreatePageProcess = true;
                 GitHub.createReleaseNotes($routeParams.newVersion, $scope.commits, $routeParams.prerelease)
                     .then(function (release) {
-                        if (release) {
-                            $scope.btnTxt = "Next";
-                            $scope.html_url = release.html_url;
-                        } else {
-                            $scope.btnTxt = "Close";
-                        }
+                        $scope.btnTxt = "Next";
+                        $scope.html_url = release.html_url;
+                    })
+                    .catch(function (e) {
+                        $scope.btnTxt = "Close";
+                        $scope.errMsg = e.data.message;
+                    })
+                    .finally(function () {
                         $scope.inCreatePageProcess = false;
                     });
             } else if ($scope.btnTxt === "Next") {

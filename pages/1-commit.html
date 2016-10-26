@@ -17,7 +17,7 @@
     <center>
         <img ng-if="btnTxt === 'Next'" height="32px;" width="32px;" src="../icons/success.ico">
         <div ng-if="btnTxt === 'Close'">
-            <p>Some error occurs. Please try again later...</p>
+            <p>{{errMsg}}</p>
             <img height="32px;" width="32px;" src="../icons/error.png">
         </div>
     </center>
