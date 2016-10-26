@@ -22,11 +22,16 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeP
                     .then(function (success) {
                         if (success) {
                             $scope.btnTxt = "Next";
-                            $scope.inTagProcess = false;
                         }
+                        else {
+                            $scope.btnTxt = "Close";
+                        }
+                        $scope.inTagProcess = false;
                     });
-            } else {
+            } else if ($scope.btnTxt === "Next") {
                 $location.path('/release-notes-github');
+            } else if ($scope.btnTxt === "Close") {
+                window.close();
             }
         };
     }]);

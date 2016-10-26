@@ -8,12 +8,16 @@
     <md-card-title>
         <md-card-title-text>
             <span class="md-headline">Tag Repository</span>
-            <span class="md-subhead">Branch: {{branch}}</span>
-            <span class="md-subhead">Tag: {{tag}}</span>
+            <span class="md-subhead"><b>Branch:</b> {{branch}}</span>
+            <span class="md-subhead"><b>Tag:</b> {{tag}}</span>
         </md-card-title-text>
     </md-card-title>
     <center>
         <img ng-if="btnTxt === 'Next'" height="32px;" width="32px;" src="../icons/success.ico">
+        <div ng-if="btnTxt === 'Close'">
+            <p>Some error occurs. Please try again later...</p>
+            <img height="32px;" width="32px;" src="../icons/error.png">
+        </div>
     </center>
     <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
         <md-button class="md-raised md-warn" ng-click="onTagClicked()" ng-disabled="inTagProcess">{{btnTxt}}

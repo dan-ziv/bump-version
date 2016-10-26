@@ -25,7 +25,7 @@ var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute'])
                 })
                 .when('/release-notes-github', {
                     templateUrl: '3-release-notes-github.html',
-                    controller: 'releaseNotesGithubController',
+                    controller: 'releaseNotesGitHubController',
                 })
                 .when('/release-notes-confluence', {
                     templateUrl: '4-release-notes-confluence.html',

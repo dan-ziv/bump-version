@@ -16,6 +16,15 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             return _owner + '/' + _repo;
         };
 
+        this.getCommitsByKeys = function () {
+            return this.getCommitsSinceLastRelease()
+                .then(function (commits) {
+                    if (commits) {
+                        return _extractFECs(commits);
+                    }
+                });
+        };
+
         this.getCommitsAsTitles = function () {
             return this.getCommitsSinceLastRelease()
                 .then(function (commits) {

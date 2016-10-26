@@ -4,7 +4,7 @@ app.controller('commitController', ['$scope', '$location', '$timeout', '$routePa
         $scope.btnTxt = "Commit";
         $scope.loadingPage = true;
         $scope.inCommitProcess = false;
-        $scope.line = 'v' + $routeParams.newVersion;
+        $scope.tag = 'v' + $routeParams.newVersion;
 
         (function () {
             GitHub.getCurrentBranch($routeParams.currentVersion)
@@ -23,11 +23,16 @@ app.controller('commitController', ['$scope', '$location', '$timeout', '$routePa
                     .then(function (success) {
                         if (success) {
                             $scope.btnTxt = "Next";
-                            $scope.inCommitProcess = false;
                         }
+                        else {
+                            $scope.btnTxt = "Close";
+                        }
+                        $scope.inCommitProcess = false;
                     });
-            } else {
+            } else if ($scope.btnTxt === "Next") {
                 $location.path('/tag-repo');
+            } else if ($scope.btnTxt === "Close") {
+                window.close();
             }
         };
     }]);

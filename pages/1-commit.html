@@ -7,15 +7,19 @@
 <div ng-if="!loadingPage">
     <md-card-title>
         <md-card-title-text>
-            <span class="md-headline">Commit to DefaultSetting.php
+            <span class="md-headline">Commit to DefaultSettings.php
             </span>
-            <span class="md-subhead">Branch: {{branch}}</span>
-            <span class="md-subhead">File path: {{path}}</span>
-            <span class="md-subhead">Tag to commit: {{line}}</span>
+            <span class="md-subhead"><b>Branch:</b> {{branch}}</span>
+            <span class="md-subhead"><b>File Path:</b> {{path}}</span>
+            <span class="md-subhead"><b>Tag to Commit:</b> {{tag}}</span>
         </md-card-title-text>
     </md-card-title>
     <center>
         <img ng-if="btnTxt === 'Next'" height="32px;" width="32px;" src="../icons/success.ico">
+        <div ng-if="btnTxt === 'Close'">
+            <p>Some error occurs. Please try again later...</p>
+            <img height="32px;" width="32px;" src="../icons/error.png">
+        </div>
     </center>
     <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
         <md-button class="md-raised md-warn" ng-click="onCommitClicked()" ng-disabled="inCommitProcess">{{btnTxt}}

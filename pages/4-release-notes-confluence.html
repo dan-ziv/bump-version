@@ -1,10 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div ng-if="loadingPage">
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
 
-</body>
-</html>
+<div ng-if="!loadingPage">
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Release Notes - Confluence</span>
+
+            <md-input-container>
+                <label>Title</label>
+                <input ng-model="title">
+            </md-input-container>
+
+            <md-input-container>
+                <label>Sub Title</label>
+                <input ng-model="subTitle">
+            </md-input-container>
+
+            <label>Version Summary</label><br>
+            <div layout="row">
+                <div flex>
+                    <md-checkbox ng-model="versionSummary.content" aria-label="Content">Content</md-checkbox>
+                </div>
+                <div flex>
+                    <md-checkbox ng-model="versionSummary.fixedBugs" aria-label="Fixed Bugs">Fixed Bugs</md-checkbox>
+                </div>
+                <div flex>
+                    <md-checkbox ng-model="versionSummary.newFeatures" aria-label="New Features">New Features
+                    </md-checkbox>
+                </div>
+            </div>
+
+            <md-divider></md-divider>
+            <br>
+
+            <label>Fixed Bugs and New features</label><br>
+            <md-chips ng-model="notes"></md-chips>
+
+            <md-divider></md-divider>
+            <br>
+
+            <md-input-container>
+                <label>Important To Know</label>
+                <input ng-model="importantToKnow">
+            </md-input-container>
+
+            <md-input-container>
+                <label>Known Issues</label>
+                <input ng-model="knownIssues">
+            </md-input-container>
+
+            <md-input-container>
+                <label>Pre Sanity Tests</label>
+                <input ng-model="preSanityTests">
+            </md-input-container>
+        </md-card-title-text>
+    </md-card-title>
+    <center>
+        <div ng-if="btnTxt === 'Next'">
+            <img height="32px;" width="32px;" src="../icons/success.ico">
+            <p>You can find your Confluence release notes here:</p>
+            <a ng-href="{{html_url}}">{{html_url}}</a>
+            <br><br>
+        </div>
+        <div ng-if="btnTxt === 'Close'">
+            <p>Some error occurs. Please try again later...</p>
+            <img height="32px;" width="32px;" src="../icons/error.png">
+        </div>
+    </center>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <md-button class="md-raised md-warn" ng-click="onCreatePageClicked()" ng-disabled="inCreatePageProcess">
+            {{btnTxt}}
+        </md-button>
+    </section>
+</div>

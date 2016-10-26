@@ -12,14 +12,23 @@
                 <label>Title</label>
                 <input ng-model="title">
             </md-input-container>
-            <md-chips ng-model="commits" readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
+            <md-input-container>
+                <label>What's in this release?</label>
+                <md-chips ng-model="commits" readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
+            </md-input-container>
         </md-card-title-text>
     </md-card-title>
-    <center ng-if="btnTxt === 'Next'">
-        <img height="32px;" width="32px;" src="../icons/success.ico">
-        <p>You can find your release notes here:</p>
-        <a ng-href="{{html_url}}">{{html_url}}</a>
-        <br>
+    <center>
+        <div ng-if="btnTxt === 'Next'">
+            <img height="32px;" width="32px;" src="../icons/success.ico">
+            <p>You can find your GitHub release notes here:</p>
+            <a ng-href="{{html_url}}">{{html_url}}</a>
+            <br><br>
+        </div>
+        <div ng-if="btnTxt === 'Close'">
+            <p>Some error occurs. Please try again later...</p>
+            <img height="32px;" width="32px;" src="../icons/error.png">
+        </div>
     </center>
     <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
         <md-button class="md-raised md-warn" ng-click="onCreateNotesClicked()" ng-disabled="inCreateNotesProcess">
