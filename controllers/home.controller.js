@@ -11,7 +11,7 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'Gi
                         $scope.control.isAuthenticated = true;
                         $scope.control.user = {name: User.getName(), avatar: User.getAvatar()};
                         $scope.currentVersion = snapshot.val();
-                        $scope.repo = GitHub.getRepoName();
+                        $scope.repo = GitHub.getFullRepositoryName();
                         $scope.onPreReleaseChange();
                         $scope.loadingPage = false;
                     }, 0);

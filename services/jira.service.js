@@ -57,7 +57,7 @@ app.service('Jira', ['$http', '$q', function ($http, $q) {
                 deferred.resolve(response.data);
             })
             .catch(function (e) {
-                deferred.resolve(null);
+                deferred.reject(e);
             });
 
         return deferred.promise;
@@ -71,7 +71,7 @@ app.service('Jira', ['$http', '$q', function ($http, $q) {
                 deferred.resolve(response.data.transitions);
             })
             .catch(function (e) {
-                deferred.resolve(null);
+                deferred.reject(e);
             });
 
         return deferred.promise;
@@ -87,7 +87,7 @@ app.service('Jira', ['$http', '$q', function ($http, $q) {
         }).then(function (response) {
             deferred.resolve(response.data);
         }).catch(function (e) {
-            deferred.resolve(null);
+            deferred.reject(e);
         });
 
         return deferred.promise;
@@ -101,7 +101,7 @@ app.service('Jira', ['$http', '$q', function ($http, $q) {
         }).then(function (response) {
             deferred.resolve(response.data);
         }).catch(function (e) {
-            deferred.resolve(null);
+            deferred.reject(e);
         });
 
         return deferred.promise;

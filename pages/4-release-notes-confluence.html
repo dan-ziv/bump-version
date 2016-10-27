@@ -8,27 +8,28 @@
     <md-card-title>
         <md-card-title-text>
             <span class="md-headline">Release Notes - Confluence</span>
+            <md-divider></md-divider>
 
             <md-input-container>
                 <label>Title</label>
-                <input ng-model="title">
+                <input ng-model="pageData.title">
             </md-input-container>
 
             <md-input-container>
                 <label>Sub Title</label>
-                <input ng-model="subTitle">
+                <input ng-model="pageData.subTitle">
             </md-input-container>
 
             <label>Version Summary</label><br>
             <div layout="row">
                 <div flex>
-                    <md-checkbox ng-model="versionSummary.content" aria-label="Content">Content</md-checkbox>
+                    <md-checkbox ng-model="pageData.versionSummary.content" aria-label="Content">Content</md-checkbox>
                 </div>
                 <div flex>
-                    <md-checkbox ng-model="versionSummary.fixedBugs" aria-label="Fixed Bugs">Fixed Bugs</md-checkbox>
+                    <md-checkbox ng-model="pageData.versionSummary.fixedBugs" aria-label="Fixed Bugs">Fixed Bugs</md-checkbox>
                 </div>
                 <div flex>
-                    <md-checkbox ng-model="versionSummary.newFeatures" aria-label="New Features">New Features
+                    <md-checkbox ng-model="pageData.versionSummary.newFeatures" aria-label="New Features">New Features
                     </md-checkbox>
                 </div>
             </div>
@@ -37,36 +38,36 @@
             <br>
 
             <label>Fixed Bugs and New features</label><br>
-            <md-chips ng-model="notes"></md-chips>
+            <md-chips ng-model="pageData.notes"></md-chips>
 
             <md-divider></md-divider>
             <br>
 
             <md-input-container>
                 <label>Important To Know</label>
-                <input ng-model="importantToKnow">
+                <input ng-model="pageData.importantToKnow">
             </md-input-container>
 
             <md-input-container>
                 <label>Known Issues</label>
-                <input ng-model="knownIssues">
+                <input ng-model="pageData.knownIssues">
             </md-input-container>
 
             <md-input-container>
                 <label>Pre Sanity Tests</label>
-                <input ng-model="preSanityTests">
+                <input ng-model="pageData.preSanityTests">
             </md-input-container>
         </md-card-title-text>
     </md-card-title>
     <center>
         <div ng-if="btnTxt === 'Next'">
             <img height="32px;" width="32px;" src="../icons/success.ico">
-            <p>You can find your Confluence release notes here:</p>
+            <p>Paste this link in your Email message:</p>
             <a ng-href="{{html_url}}">{{html_url}}</a>
             <br><br>
         </div>
         <div ng-if="btnTxt === 'Close'">
-            <p>Some error occurs. Please try again later...</p>
+            <p>{{errMsg}}</p>
             <img height="32px;" width="32px;" src="../icons/error.png">
         </div>
     </center>

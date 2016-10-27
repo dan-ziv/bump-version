@@ -142,7 +142,7 @@ app.service('User', ['$http', '$q', function ($http, $q) {
             localStorage['bumpVersion-accessToken'] = token;
             _access_token = token;
             console.log('Setting access_token: ', _access_token);
-            callback(null, _access_token);
+            callback(null);
         }
     }
 

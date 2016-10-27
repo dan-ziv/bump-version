@@ -7,7 +7,7 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
         $scope.title = 'v' + $routeParams.newVersion;
 
         (function () {
-            GitHub.getCommitsAsTitles()
+            GitHub.getNewReleaseCommitsUnified()
                 .then(function (commits) {
                     $scope.commits = commits;
                 })

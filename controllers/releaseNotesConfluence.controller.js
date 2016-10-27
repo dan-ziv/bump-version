@@ -4,24 +4,25 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
         $scope.btnTxt = "Create Page";
         $scope.loadingPage = true;
         $scope.inCreatePageProcess = false;
-        $scope.title = 'HTML5 v' + $routeParams.newVersion;
-        $scope.subTitle = 'HTML5 Release notes for version: v' + $routeParams.newVersion;
-        $scope.versionSummary = {content: true, fixedBugs: true, newFeatures: false};
-        $scope.importantToKnow = "";
-        $scope.knownIssues = "";
-        $scope.preSanityTests = "";
+        $scope.pageData = {
+            title: 'HTML5 v' + $routeParams.newVersion,
+            subTitle: 'HTML5 Release notes for version: v' + $routeParams.newVersion,
+            versionSummary: {content: true, fixedBugs: true, newFeatures: false},
+            importantToKnow: "",
+            knownIssues: "",
+            preSanityTests: ""
+        };
 
         (function () {
-            GitHub.getCommitsByKeys()
+            GitHub.getNewReleaseCommitsSplitted()
                 .then(function (commits) {
-                    $scope.notes = commits.withKeys.concat(commits.withOutKeys);
+                    $scope.notes = commits.withJiraTicket.concat(commits.withOutJiraTicket);
                 })
                 .catch(function (e) {
                 })
                 .finally(function () {
                     $scope.loadingPage = false;
                 });
-            ;
         })();
 
         $scope.onCreatePageClicked = function () {

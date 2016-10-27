@@ -3,12 +3,9 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
 
         var _apiPrefix = 'https://api.github.com';
         var _owner = "fecbot";
-        // var _owner = "kaltura";
         var _repo = "fec-testing";
-        // var _repo = "mwEmbed";
         var _branch = null;
         var _branches = [];
-        // var _defaultSettingsFilePath = 'includes/DefaultSettings.php';
         var _defaultSettingsFilePath = 'DefaultSettings.php';
         var _statuses = ["CLOSED", "READY FOR QA", "DEPLOYED"];
 
@@ -33,31 +30,30 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             return _doCreateReleaseNotes(tag, body, prerelease);
         };
 
-        this.getRepoName = function () {
+        this.getFullRepositoryName = function () {
             return _owner + '/' + _repo;
         };
 
-        this.getCommitsByKeys = function () {
+        this.getNewReleaseCommitsSplitted = function () {
             return this.getCommitsSinceLastRelease()
                 .then(function (commits) {
-                    return _extractFECs(commits);
+                    return _splitToJiraAndNonJira(commits);
                 });
         };
 
-        this.getCommitsAsTitles = function () {
+        this.getNewReleaseCommitsUnified = function () {
             return this.getCommitsSinceLastRelease()
                 .then(function (commits) {
-                    var fecs = _extractFECs(commits);
-                    if (fecs.withKeys.length > 0) {
-                        return Jira.getIssues(fecs.withKeys)
+                    var newRelease = _splitToJiraAndNonJira(commits);
+                    if (newRelease.withJiraTicket.length > 0) {
+                        return Jira.getIssues(newRelease.withJiraTicket)
                             .then(function (jiras) {
-                                var titles = _extractTitles(jiras);
-                                titles = titles.concat(fecs.withOutKeys);
-                                return titles;
+                                var titles = _extractTitlesFromJira(jiras);
+                                return titles.concat(newRelease.withOutJiraTicket);
                             });
                     }
                     else {
-                        return fecs.withOutKeys;
+                        return newRelease.withOutJiraTicket;
                     }
                 });
         };
@@ -91,17 +87,6 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                 });
         };
 
-        this.commitAndTagVersion = function (currentVersion, newVersion) {
-            return _getCurrentBranch(currentVersion, 1)
-                .then(function (branchName) {
-                    _branch = branchName || 'master';
-                    return _updateFile(currentVersion, newVersion)
-                        .then(function () {
-                            return _tagRepository(newVersion);
-                        });
-                });
-        };
-
         this.getCommitsSinceLastRelease = function () {
             return _doGetCommits()
                 .then(function (commits) {
@@ -116,7 +101,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                 });
         };
 
-        function _extractTitles(jiras) {
+        function _extractTitlesFromJira(jiras) {
             var titles = [];
             if (jiras) {
                 for (var i = 0; i < jiras.length; i++) {
@@ -127,8 +112,8 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             return titles;
         }
 
-        function _extractFECs(commits) {
-            var keys = {withKeys: [], withOutKeys: []};
+        function _splitToJiraAndNonJira(commits) {
+            var newRelease = {withJiraTicket: [], withOutJiraTicket: []};
             for (var i = 0; i < commits.length; i++) {
                 var commit = commits[i];
                 var msg = commit.commit.message;
@@ -136,17 +121,17 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                 var keys_results = msg.match(regexp);
                 if (keys_results && keys_results.length) {
                     for (var j = 0; j < keys_results.length; j++) {
-                        if (_.indexOf(keys.withKeys, keys_results[j]) === -1) {
-                            keys.withKeys.push(keys_results[j]);
+                        if (_.indexOf(newRelease.withJiraTicket, keys_results[j]) === -1) {
+                            newRelease.withJiraTicket.push(keys_results[j]);
                         }
                     }
                 }
                 else {
                     var lines = msg.split('\n');
-                    keys.withOutKeys.push(lines[0]);
+                    newRelease.withOutJiraTicket.push(lines[0]);
                 }
             }
-            return keys;
+            return newRelease;
         }
 
         function _getCurrentBranch(version, page) {

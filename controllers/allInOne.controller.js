@@ -16,8 +16,8 @@ app.controller('allInOneController', ['$scope', '$timeout', '$location',
 //                 .then(function (commits) {
 //                     if (commits) {
 //                         fecs = _extractFECs(commits);
-//                         if (fecs.withKeys.length > 0) {
-//                             return Jira.getIssues(fecs.withKeys);
+//                         if (fecs.withJiraTicket.length > 0) {
+//                             return Jira.getIssues(fecs.withJiraTicket);
 //                         }
 //                         else {
 //                             return null;
@@ -28,12 +28,12 @@ app.controller('allInOneController', ['$scope', '$timeout', '$location',
 //                 })
 //                 .then(function (jiras) {
 //                     var titles = _extractTitles(jiras);
-//                     titles = titles.concat(fecs.withOutKeys);
+//                     titles = titles.concat(fecs.withOutJiraTicket);
 //                     return Github.createReleaseNotes(newVersion, titles, prerelease);
 //                 })
 //                 .then(function (release) {
 //                     if (release) {
-//                         return Jira.changeAssignee(fecs.withKeys);
+//                         return Jira.changeAssignee(fecs.withJiraTicket);
 //                     }
 //                     else {
 //                         throw new Error();
@@ -45,7 +45,7 @@ app.controller('allInOneController', ['$scope', '$timeout', '$location',
 //                             throw new Error();
 //                         }
 //                     });
-//                     return Jira.changeStatuses(fecs.withKeys);
+//                     return Jira.changeStatuses(fecs.withJiraTicket);
 //                 })
 //                 .then(function (results) {
 //                     //TODO: Confluence page
@@ -65,7 +65,7 @@ app.controller('allInOneController', ['$scope', '$timeout', '$location',
 //         }
 //
 //         function _extractFECs(commits) {
-//             var keys = {withKeys: [], withOutKeys: []};
+//             var keys = {withJiraTicket: [], withOutJiraTicket: []};
 //             for (var i = 0; i < commits.length; i++) {
 //                 var commit = commits[i];
 //                 var msg = commit.commit.message;
@@ -73,14 +73,14 @@ app.controller('allInOneController', ['$scope', '$timeout', '$location',
 //                 var keys_results = msg.match(regexp);
 //                 if (keys_results && keys_results.length) {
 //                     for (var j = 0; j < keys_results.length; j++) {
-//                         if (_.indexOf(keys.withKeys, keys_results[j]) === -1) {
-//                             keys.withKeys.push(keys_results[j]);
+//                         if (_.indexOf(keys.withJiraTicket, keys_results[j]) === -1) {
+//                             keys.withJiraTicket.push(keys_results[j]);
 //                         }
 //                     }
 //                 }
 //                 else {
 //                     var lines = msg.split('\n');
-//                     keys.withOutKeys.push(lines[0]);
+//                     keys.withOutJiraTicket.push(lines[0]);
 //                 }
 //             }
 //             return keys;
