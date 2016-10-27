@@ -40,22 +40,22 @@
                 <span class="md-title">{{global.user.name}}</span>
             </div>
             <hr>
-        </center>
 
-        <div ng-if="global.inReleaseProcess">
-            <div layout="column" style="padding-left: 5px;">
-                <div flex>
-                    <span class="md-body-1"><b>Repository:</b> {{global.repo}}</span>
+            <div ng-if="global.inReleaseProcess">
+                <div layout="column" style="padding-left: 5px;">
+                    <div flex>
+                        <span class="md-body-1"><b>Repository:</b> {{global.repo}}</span>
+                    </div>
+                    <div flex>
+                        <span class="md-body-1"><b>Branch:</b> {{global.branch}}</span>
+                    </div>
+                    <div flex>
+                        <span class="md-body-1"><b>Version:</b> {{global.newVersion}}</span>
+                    </div>
                 </div>
-                <div flex>
-                    <span class="md-body-1"><b>Branch:</b> {{global.branch}}</span>
-                </div>
-                <div flex>
-                    <span class="md-body-1"><b>Version:</b> {{global.newVersion}}</span>
-                </div>
+                <md-divider></md-divider>
             </div>
-            <md-divider></md-divider>
-        </div>
+        </center>
 
         <div ng-view></div>
 
