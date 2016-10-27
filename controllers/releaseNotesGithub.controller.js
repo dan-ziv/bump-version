@@ -4,7 +4,7 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
         $scope.btnTxt = "Create Release Notes";
         $scope.loadingPage = true;
         $scope.inCreatePageProcess = false;
-        $scope.title = 'v' + $routeParams.newVersion;
+        $scope.title = 'v' + $scope.global.newVersion;
 
         (function () {
             GitHub.getNewReleaseCommitsUnified()
@@ -23,7 +23,7 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
             if ($scope.btnTxt === "Create Release Notes") {
                 $scope.btnTxt = "Creating Notes...";
                 $scope.inCreatePageProcess = true;
-                GitHub.createReleaseNotes($routeParams.newVersion, $scope.commits, $routeParams.prerelease)
+                GitHub.createReleaseNotes($scope.global.newVersion, $scope.commits, $scope.global.prerelease)
                     .then(function (release) {
                         $scope.btnTxt = "Next";
                         $scope.html_url = release.html_url;
