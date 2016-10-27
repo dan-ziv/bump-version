@@ -1,5 +1,5 @@
 body {
-    width: 400px;
+    resize: none;
     font-size: 15px;
     font-family: "Helvetica Neue";
 }

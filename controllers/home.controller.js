@@ -1,65 +1,66 @@
 app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'GitHub',
     function ($scope, $timeout, $location, User, GitHub) {
 
-        var _auto, _prerelease;
+        $scope.global.isAuthenticated = true;
+        $scope.global.user = {name: User.getName(), avatar: User.getAvatar()};
         $scope.loadingPage = true;
+        $scope.repos = null;
+        $scope.branches = null;
+        $scope.loadingPage = false;
 
-        (function () {
-            firebase.database().ref('/version').once('value')
-                .then(function (snapshot) {
-                    $timeout(function () {
-                        $scope.control.isAuthenticated = true;
-                        $scope.control.user = {name: User.getName(), avatar: User.getAvatar()};
-                        $scope.currentVersion = snapshot.val();
-                        $scope.repo = GitHub.getFullRepositoryName();
-                        $scope.onPreReleaseChange();
-                        $scope.loadingPage = false;
-                    }, 0);
-                });
-        })();
-
-        $scope.onAutoChange = function (auto) {
-            _auto = auto;
+        $scope.loadRepositories = function () {
+            if (!$scope.repos) {
+                GitHub.getUserRepositories()
+                    .then(function (repos) {
+                        $scope.repos = repos;
+                    });
+            }
         };
 
-        $scope.onPreReleaseChange = function (prerelease) {
-            _prerelease = prerelease;
+        $scope.loadBranches = function (repo) {
+            GitHub.getRepositoryBranches(repo)
+                .then(function (branches) {
+                    $scope.branches = branches;
+                });
+        };
+
+        $scope.getCurrentVersion = function () {
+            var that = this;
+            GitHub.setRepository($scope.global.repo);
+            GitHub.setBranch($scope.global.branch);
+            GitHub.getCurrentVersion()
+                .then(function (currentVersion) {
+                    $scope.currentVersion = currentVersion;
+                    that.onPreReleaseChange();
+                });
+        };
+
+        $scope.onPreReleaseChange = function () {
             var currentVersion = $scope.currentVersion;
             var parts = currentVersion.split('.');
             var nextNum = parts[1];
             var nextRc = parts[2];
-            if (_prerelease) {
+            if ($scope.global.prerelease) {
                 if (nextRc) {
                     var rcParts = nextRc.split('rc');
                     var nextRcVersion = rcParts[1];
                     nextRcVersion++;
-                    $scope.nextVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
+                    $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
                 }
                 else {
                     nextRc = 'rc1';
                     nextNum++;
-                    $scope.nextVersion = parts[0] + '.' + nextNum + '.' + nextRc;
+                    $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
                 }
             }
             else {
-                $scope.nextVersion = parts[0] + '.' + nextNum;
+                $scope.global.newVersion = parts[0] + '.' + nextNum;
             }
         };
 
         $scope.onCreateVersionClicked = function () {
-            if (_auto) {
-                $location.path('/all-in-one').search({
-                    currentVersion: $scope.currentVersion,
-                    newVersion: $scope.nextVersion,
-                    prerelease: _prerelease
-                });
-            }
-            else {
-                $location.path('/commit').search({
-                    currentVersion: $scope.currentVersion,
-                    newVersion: $scope.nextVersion,
-                    prerelease: _prerelease
-                });
+            if ($scope.global.repo && $scope.global.branch && $scope.global.newVersion) {
+                $location.path('/commit');
             }
         };
     }]);

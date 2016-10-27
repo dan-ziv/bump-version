@@ -1,29 +1,21 @@
-app.controller('commitController', ['$scope', '$location', '$timeout', '$routeParams', 'GitHub',
-    function ($scope, $location, $timeout, $routeParams, GitHub) {
-
-        $scope.btnTxt = "Commit";
-        $scope.loadingPage = true;
-        $scope.inCommitProcess = false;
-        $scope.tag = 'v' + $routeParams.newVersion;
+app.controller('commitController', ['$scope', '$location', '$timeout', 'GitHub',
+    function ($scope, $location, $timeout, GitHub) {
 
         (function () {
-            GitHub.getCurrentBranch($routeParams.currentVersion)
-                .then(function (branch) {
-                    $scope.branch = branch;
-                    $scope.path = GitHub.getFilePath();
-                })
-                .catch(function (e) {
-                })
-                .finally(function () {
-                    $scope.loadingPage = false;
-                });
+            // Entry to the release process
+            $scope.global.inReleaseProcess = true;
+
+            $scope.btnTxt = "Commit";
+            $scope.inCommitProcess = false;
+            $scope.path = GitHub.getFilePath();
+            $scope.loadingPage = false;
         })();
 
         $scope.onCommitClicked = function () {
             if ($scope.btnTxt === "Commit") {
                 $scope.btnTxt = "Committing...";
                 $scope.inCommitProcess = true;
-                GitHub.commitFile($routeParams.currentVersion, $routeParams.newVersion)
+                GitHub.commitFile($scope.global.newVersion)
                     .then(function () {
                         $scope.btnTxt = "Next";
                     })

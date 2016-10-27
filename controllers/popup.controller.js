@@ -36,7 +36,7 @@ var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute'])
 app.controller('popupController', ['$scope', '$location', '$timeout', 'User',
     function ($scope, $location, $timeout, User) {
 
-        $scope.control = {isAuthenticated: false, user: null};
+        $scope.global = {isAuthenticated: false, user: null, repo: null, branch: null, newVersion: null, prerelease: true};
 
         $scope.onPopupShown = function () {
             User.hasToken().then(function (hasToken) {

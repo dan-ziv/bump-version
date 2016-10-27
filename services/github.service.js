@@ -2,19 +2,51 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
     function ($http, $q, User, Jira) {
 
         var _apiPrefix = 'https://api.github.com';
-        var _owner = "fecbot";
-        var _repo = "fec-testing";
+        var _owner = null;
+        var _repo = null;
         var _branch = null;
-        var _branches = [];
         var _defaultSettingsFilePath = 'DefaultSettings.php';
         var _statuses = ["CLOSED", "READY FOR QA", "DEPLOYED"];
+
+        this.getCurrentVersion = function () {
+            return _doGetFileContents()
+                .then(function (contents) {
+                    var content = contents.content;
+                    var lines = content.split('\n');
+                    for (var i = 0; i < lines.length; i++) {
+                        var line = lines[i];
+                        if (line.startsWith("$wgMwEmbedVersion")) {
+                            var parts = line.split('=');
+                            return _extractVersion(parts[1]);
+                        }
+                    }
+                });
+        };
+
+        this.setRepository = function (repo) {
+            var parts = repo.split('/');
+            _owner = parts[0];
+            _repo = parts[1];
+        };
+
+        this.setBranch = function (branch) {
+            _branch = branch;
+        };
 
         this.tagRepository = function (newVersion) {
             return _tagRepository(newVersion);
         };
 
-        this.commitFile = function (currentVersion, newVersion) {
-            return _updateFile(currentVersion, newVersion);
+        this.commitFile = function (newVersion) {
+            return _updateFile(newVersion);
+        };
+
+        this.getUserRepositories = function () {
+            return _doGetUserRepositories();
+        };
+
+        this.getRepositoryBranches = function (repo) {
+            return _doGetRepositoryBranches(repo);
         };
 
         this.createReleaseNotes = function (tag, titles, prerelease) {
@@ -28,10 +60,6 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                 body += "* " + title + "\n";
             }
             return _doCreateReleaseNotes(tag, body, prerelease);
-        };
-
-        this.getFullRepositoryName = function () {
-            return _owner + '/' + _repo;
         };
 
         this.getNewReleaseCommitsSplitted = function () {
@@ -100,6 +128,41 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                     return [];
                 });
         };
+
+        function _extractVersion(s) {
+            s = s.replace(";", "");
+            s = s.trim();
+            return s.substring(1, s.length - 1);
+        }
+
+        function _doGetRepositoryBranches(repo) {
+            var deferred = $q.defer();
+
+            $http.get(_apiPrefix + '/repos/' + repo + '/branches?access_token=' + User.getOAuthToken() + '&per_page=1000')
+                .then(function (response) {
+                    deferred.resolve(response.data);
+                })
+                .catch(function (e) {
+                    deferred.reject(e);
+                });
+
+            return deferred.promise;
+        }
+
+        function _doGetUserRepositories() {
+            var deferred = $q.defer();
+
+            $http.get(_apiPrefix + '/user/repos?access_token=' + User.getOAuthToken()
+                + '&affiliation=collaborator,organization_member&per_page=1000')
+                .then(function (response) {
+                    deferred.resolve(response.data);
+                })
+                .catch(function (e) {
+                    deferred.reject(e);
+                });
+
+            return deferred.promise;
+        }
 
         function _extractTitlesFromJira(jiras) {
             var titles = [];
@@ -211,12 +274,20 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             return deferred.promise;
         }
 
-        function _updateFile(currentVersion, newVersion) {
+        function _updateFile(newVersion) {
             return _doGetFileContents()
                 .then(function (contents) {
-                    // Change the version in the file
-                    var oldMwEmbedVersion = "$wgMwEmbedVersion = '" + currentVersion + "'";
-                    var newMwEmbedVersion = "$wgMwEmbedVersion = '" + newVersion + "'";
+                    var oldMwEmbedVersion = null;
+                    var content = contents.content;
+                    var lines = content.split('\n');
+                    for (var i = 0; i < lines.length; i++) {
+                        var line = lines[i];
+                        if (line.startsWith("$wgMwEmbedVersion")) {
+                            oldMwEmbedVersion = line;
+                            break;
+                        }
+                    }
+                    var newMwEmbedVersion = "$wgMwEmbedVersion = '" + newVersion + "';";
                     contents.content = btoa(contents.content.replace(oldMwEmbedVersion, newMwEmbedVersion));
                     return _doCommitFile(contents, newVersion);
                 });

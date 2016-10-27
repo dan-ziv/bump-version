@@ -2660,7 +2660,7 @@ var $$AnimateQueueProvider = ['$animateProvider', function($animateProvider) {
         markElementAnimationState(element, RUNNING_STATE);
         var realRunner = $$animation(element, event, animationDetails.options);
 
-        // this will update the runner's flow-control events based on
+        // this will update the runner's flow-global events based on
         // the `realRunner` object.
         runner.setHost(realRunner);
         notifyProgress(runner, event, 'start', {});

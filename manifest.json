@@ -4,8 +4,12 @@
   "description": "This extension automate the release version flow for the Front End Core team",
   "version": "1.0",
   "browser_action": {
-    "default_icon": "icons/bump-version-icon.png",
-    "default_popup": "pages/popup.html"
+    "default_icon": "icons/bump-version-icon.png"
+  },
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ]
   },
   "permissions": [
     "identity",

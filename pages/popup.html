@@ -35,12 +35,27 @@
         <center>
             <span class="md-headline" style="color:dodgerblue">Bump</span>
             <span class="md-subhead" style="color: limegreen">Version!</span>
-            <div ng-if="control.isAuthenticated">
-                <img class="circle" ng-src="{{control.user.avatar}}"/><br>
-                <span class="md-title">{{control.user.name}}</span>
+            <div ng-if="global.isAuthenticated">
+                <img class="circle" ng-src="{{global.user.avatar}}"/><br>
+                <span class="md-title">{{global.user.name}}</span>
             </div>
             <hr>
         </center>
+
+        <div ng-if="global.inReleaseProcess">
+            <div layout="column" style="padding-left: 5px;">
+                <div flex>
+                    <span class="md-body-1"><b>Repository:</b> {{global.repo}}</span>
+                </div>
+                <div flex>
+                    <span class="md-body-1"><b>Branch:</b> {{global.branch}}</span>
+                </div>
+                <div flex>
+                    <span class="md-body-1"><b>Version:</b> {{global.newVersion}}</span>
+                </div>
+            </div>
+            <md-divider></md-divider>
+        </div>
 
         <div ng-view></div>
 

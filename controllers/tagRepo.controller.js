@@ -1,28 +1,16 @@
-app.controller('tagRepoController', ['$scope', '$location', '$timeout', '$routeParams', 'GitHub',
-    function ($scope, $location, $timeout, $routeParams, GitHub) {
+app.controller('tagRepoController', ['$scope', '$location', '$timeout', 'GitHub',
+    function ($scope, $location, $timeout, GitHub) {
 
         $scope.btnTxt = "Tag";
-        $scope.loadingPage = true;
         $scope.inTagProcess = false;
-        $scope.tag = 'v' + $routeParams.newVersion;
-
-        (function () {
-            GitHub.getCurrentBranch($routeParams.currentVersion)
-                .then(function (branch) {
-                    $scope.branch = branch;
-                })
-                .catch(function (e) {
-                })
-                .finally(function () {
-                    $scope.loadingPage = false;
-                });
-        })();
+        $scope.tag = 'v' + $scope.global.newVersion;
+        $scope.loadingPage = false;
 
         $scope.onTagClicked = function () {
             if ($scope.btnTxt === "Tag") {
                 $scope.btnTxt = "Tagging...";
                 $scope.inTagProcess = true;
-                GitHub.tagRepository($routeParams.newVersion)
+                GitHub.tagRepository($scope.global.newVersion)
                     .then(function () {
                         $scope.btnTxt = "Next";
                     })

@@ -3117,7 +3117,7 @@ function InterimElementProvider() {
        * @name $$interimElement.$service
        *
        * @description
-       * A service used to control inserting and removing an element into the DOM.
+       * A service used to global inserting and removing an element into the DOM.
        *
        */
       var service, stack = [];
@@ -10331,7 +10331,7 @@ function MdDividerDirective($mdTheming) {
       // Set the trigger to be above all of the actions so they disappear behind it.
       triggerElement.style.zIndex = startZIndex + items.length + 1;
 
-      // If the control is closed, hide the items behind the trigger
+      // If the global is closed, hide the items behind the trigger
       if (!ctrl.isOpen) {
         angular.forEach(items, function(item, index) {
           var newPosition, axis;
@@ -12705,7 +12705,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
     controller: 'MdListController',
     compile: function(tEl, tAttrs) {
 
-      // Check for proxy controls (no ng-click on parent, and a control inside)
+      // Check for proxy controls (no ng-click on parent, and a global inside)
       var secondaryItems = tEl[0].querySelectorAll('.md-secondary');
       var hasProxiedElement;
       var proxyElement;
@@ -13005,7 +13005,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
 
         if (proxies.length == 1 && clickChild) {
           $element.children().eq(0).on('click', function(e) {
-            // When the event is coming from an control and it should not trigger the proxied element
+            // When the event is coming from an global and it should not trigger the proxied element
             // then we are skipping.
             if (isEventFromControl(e)) return;
 
@@ -14438,7 +14438,7 @@ MdPanelService.prototype.newPanelAnimation = function() {
 /**
  * Wraps the users template in two elements, md-panel-outer-wrapper, which
  * covers the entire attachTo element, and md-panel, which contains only the
- * template. This allows the panel control over positioning, animations,
+ * template. This allows the panel global over positioning, animations,
  * and similar properties.
  * @param {string} origTemplate The original template.
  * @returns {string} The wrapped template.
@@ -14463,7 +14463,7 @@ MdPanelService.prototype._wrapTemplate = function(origTemplate) {
 
 /**
  * A reference to a created panel. This reference contains a unique id for the
- * panel, along with properties/functions used to control the panel.
+ * panel, along with properties/functions used to global the panel.
  * @param {!Object} config
  * @param {!angular.$injector} $injector
  * @final @constructor
@@ -25292,7 +25292,7 @@ MdChipsCtrl.prototype.hasFocus = function () {
      * Building the template involves 3 key components:
      * static chips
      * chip template
-     * input control
+     * input global
      *
      * If no `ng-model` is provided, only the static chip work needs to be done.
      *
