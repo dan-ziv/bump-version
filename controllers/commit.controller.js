@@ -32,4 +32,12 @@ app.controller('commitController', ['$scope', '$location', '$timeout', 'GitHub',
                 window.close();
             }
         };
+
+        $scope.skip = function () {
+            $location.path('/tag-repo');
+        };
+
+        $scope.back = function () {
+            $location.path('/home');
+        };
     }]);

@@ -41,4 +41,12 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
                 window.close();
             }
         };
+
+        $scope.skip = function () {
+            $location.path('/release-notes-confluence');
+        };
+
+        $scope.back = function () {
+            $location.path('/tag-repo');
+        };
     }]);

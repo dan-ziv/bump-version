@@ -6,7 +6,6 @@ app.controller('homeController', ['$scope', '$timeout', '$location', '$q', 'User
         $scope.global.user = {name: User.getName(), avatar: User.getAvatar()};
         $scope.repos = null;
         $scope.branches = null;
-        $scope.simulateQuery = true;
 
         loadRepositories().then(function (repos) {
             $scope.repos = repos;
@@ -49,35 +48,31 @@ app.controller('homeController', ['$scope', '$timeout', '$location', '$q', 'User
         }
 
         $scope.queryRepoSearch = function (query) {
+            var deferred = $q.defer();
             if ($scope.repos) {
-                var results = query ? $scope.repos.filter(createFilterForRepo(query)) : $scope.repos,
-                    deferred;
-                if ($scope.simulateQuery) {
-                    deferred = $q.defer();
-                    $timeout(function () {
-                        deferred.resolve(results);
-                    }, Math.random() * 1000, false);
-                    return deferred.promise;
-                } else {
-                    return results;
-                }
+                var results = query ? $scope.repos.filter(createFilterForRepo(query)) : $scope.repos;
+                $timeout(function () {
+                    deferred.resolve(results);
+                }, Math.random() * 1000, false);
             }
+            else {
+                deferred.resolve([]);
+            }
+            return deferred.promise;
         };
 
         $scope.queryBranchSearch = function (query) {
-            if ($scope.brances) {
-                var results = query ? $scope.branches.filter(createFilterForBranch(query)) : $scope.branches,
-                    deferred;
-                if ($scope.simulateQuery) {
-                    deferred = $q.defer();
-                    $timeout(function () {
-                        deferred.resolve(results);
-                    }, Math.random() * 1000, false);
-                    return deferred.promise;
-                } else {
-                    return results;
-                }
+            var deferred = $q.defer();
+            if ($scope.branches) {
+                var results = query ? $scope.branches.filter(createFilterForBranch(query)) : $scope.branches;
+                $timeout(function () {
+                    deferred.resolve(results);
+                }, Math.random() * 1000, false);
             }
+            else {
+                deferred.resolve([]);
+            }
+            return deferred.promise;
         };
 
         function createFilterForRepo(query) {

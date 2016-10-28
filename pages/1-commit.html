@@ -23,4 +23,8 @@
         <md-button class="md-raised md-warn" ng-click="onCommitClicked()" ng-disabled="inCommitProcess">{{btnTxt}}
         </md-button>
     </section>
+    <div layout="row">
+        <div flex><a ng-click="back()" href="">Back</a></div>
+        <div flex><a style="float: right;" ng-click="skip()" href="">Skip</a></div>
+    </div>
 </div>

@@ -5,8 +5,8 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
         $scope.loadingPage = true;
         $scope.inCreatePageProcess = false;
         $scope.pageData = {
-            title: 'HTML5 v' + $routeParams.newVersion,
-            subTitle: 'HTML5 Release notes for version: v' + $routeParams.newVersion,
+            title: 'HTML5 v' + $scope.global.newVersion,
+            subTitle: 'HTML5 Release notes for version: v' + $scope.global.newVersion,
             versionSummary: {content: true, fixedBugs: true, newFeatures: false},
             importantToKnow: "",
             knownIssues: "",
@@ -43,5 +43,13 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
             } else if ($scope.btnTxt === "Close") {
                 window.close();
             }
+        };
+
+        $scope.skip = function () {
+            $location.path('/change-statuses');
+        };
+
+        $scope.back = function () {
+            $location.path('/release-notes-github');
         };
     }]);

@@ -27,4 +27,12 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', 'GitHub'
                 window.close();
             }
         };
+
+        $scope.skip = function () {
+            $location.path('/release-notes-github');
+        };
+
+        $scope.back = function () {
+            $location.path('/commit');
+        };
     }]);
