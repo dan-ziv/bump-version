@@ -44,10 +44,10 @@
             <div ng-if="global.inReleaseProcess">
                 <div layout="column" style="padding-left: 5px;">
                     <div flex>
-                        <span class="md-body-1"><b>Repository:</b> {{global.repo}}</span>
+                        <span class="md-body-1"><b>Repository:</b> {{global.repo.full_name}}</span>
                     </div>
                     <div flex>
-                        <span class="md-body-1"><b>Branch:</b> {{global.branch}}</span>
+                        <span class="md-body-1"><b>Branch:</b> {{global.branch.name}}</span>
                     </div>
                     <div flex>
                         <span class="md-body-1"><b>Version:</b> {{global.newVersion}}</span>

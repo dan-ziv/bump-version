@@ -1,20 +1,37 @@
-<div ng-if="loadingPage">
+<div ng-if="loadingPage === true">
     <div layout="row" layout-sm="column" layout-align="space-around">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 </div>
 
-<div ng-if="!loadingPage">
+<div ng-if="loadingPage === false">
     <div>
         <center>
-            <md-select placeholder="Choose Repository" ng-model="global.repo" md-on-close="loadBranches(global.repo)"
-                       md-on-open="loadRepositories()" style="width: 300px;">
-                <md-option ng-value="repo.full_name" ng-repeat="repo in repos">{{repo.full_name}}</md-option>
-            </md-select>
-            <md-select placeholder="Choose Branch" ng-model="global.branch" md-on-close="getCurrentVersion()"
-                       style="width: 300px;">
-                <md-option ng-value="branch.name" ng-repeat="branch in branches">{{branch.name}}</md-option>
-            </md-select>
+            <md-autocomplete style="width: 300px;"
+                             md-selected-item="global.repo"
+                             md-search-text="searchRepoText"
+                             md-selected-item-change="selectedRepoChange(repo)"
+                             md-items="repo in queryRepoSearch(searchRepoText)"
+                             md-item-text="repo.full_name"
+                             md-min-length="0"
+                             placeholder="Choose Repository">
+                <md-item-template>
+                    <span md-highlight-text="searchRepoText" md-highlight-flags="^i">{{repo.full_name}}</span>
+                </md-item-template>
+            </md-autocomplete>
+            <br>
+            <md-autocomplete style="width: 300px;"
+                             md-selected-item="global.branch"
+                             md-search-text="searchBranchText"
+                             md-selected-item-change="selectedBranchChange(branch)"
+                             md-items="branch in queryBranchSearch(searchBranchText)"
+                             md-item-text="branch.name"
+                             md-min-length="0"
+                             placeholder="Choose Branch">
+                <md-item-template>
+                    <span md-highlight-text="searchBranchText" md-highlight-flags="^i">{{branch.name}}</span>
+                </md-item-template>
+            </md-autocomplete>
             <div ng-if="currentVersion">
                 <p class="md-body-2"><b> Current version: </b>{{currentVersion}}</p>
                 <p class="md-body-2"><b>Next version: </b><span style="color: red"> {{global.newVersion}}</span></p>

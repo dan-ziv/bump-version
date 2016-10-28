@@ -1,39 +1,112 @@
-app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'GitHub',
-    function ($scope, $timeout, $location, User, GitHub) {
+app.controller('homeController', ['$scope', '$timeout', '$location', '$q', 'User', 'GitHub',
+    function ($scope, $timeout, $location, $q, User, GitHub) {
 
+        $scope.loadingPage = true;
         $scope.global.isAuthenticated = true;
         $scope.global.user = {name: User.getName(), avatar: User.getAvatar()};
         $scope.repos = null;
         $scope.branches = null;
-        $scope.loadingPage = false;
+        $scope.simulateQuery = true;
 
-        $scope.loadRepositories = function () {
-            $scope.currentVersion = null;
-            if (!$scope.repos) {
+        loadRepositories().then(function (repos) {
+            $scope.repos = repos;
+            $scope.loadingPage = false;
+        });
+
+        function loadRepositories() {
+            var promise = $q.defer();
+
+            if ($scope.repos) {
+                promise.resolve($scope.repos);
+            } else {
                 GitHub.getUserRepositories()
                     .then(function (repos) {
-                        $scope.repos = repos;
+                        promise.resolve(repos);
                     });
+            }
+
+            return promise.promise;
+        }
+
+        $scope.selectedRepoChange = function (repo) {
+            if (repo) {
+                $scope.currentVersion = null;
+                loadBranches(repo.full_name);
             }
         };
 
-        $scope.loadBranches = function (repo) {
+        $scope.selectedBranchChange = function (branch) {
+            if (branch) {
+                getCurrentVersion();
+            }
+        };
+
+        function loadBranches(repo) {
             GitHub.getRepositoryBranches(repo)
                 .then(function (branches) {
                     $scope.branches = branches;
                 });
+        }
+
+        $scope.queryRepoSearch = function (query) {
+            if ($scope.repos) {
+                var results = query ? $scope.repos.filter(createFilterForRepo(query)) : $scope.repos,
+                    deferred;
+                if ($scope.simulateQuery) {
+                    deferred = $q.defer();
+                    $timeout(function () {
+                        deferred.resolve(results);
+                    }, Math.random() * 1000, false);
+                    return deferred.promise;
+                } else {
+                    return results;
+                }
+            }
         };
 
-        $scope.getCurrentVersion = function () {
-            var that = this;
-            GitHub.setRepository($scope.global.repo);
-            GitHub.setBranch($scope.global.branch);
+        $scope.queryBranchSearch = function (query) {
+            if ($scope.brances) {
+                var results = query ? $scope.branches.filter(createFilterForBranch(query)) : $scope.branches,
+                    deferred;
+                if ($scope.simulateQuery) {
+                    deferred = $q.defer();
+                    $timeout(function () {
+                        deferred.resolve(results);
+                    }, Math.random() * 1000, false);
+                    return deferred.promise;
+                } else {
+                    return results;
+                }
+            }
+        };
+
+        function createFilterForRepo(query) {
+            var lowercaseQuery = angular.lowercase(query);
+
+            return function filterFn(repo) {
+                var lowercaseName = angular.lowercase(repo.full_name);
+                return (lowercaseName.indexOf(lowercaseQuery) !== -1);
+            };
+        }
+
+        function createFilterForBranch(query) {
+            var lowercaseQuery = angular.lowercase(query);
+
+            return function filterFn(branch) {
+                var lowercaseName = angular.lowercase(branch.name);
+                return (lowercaseName.indexOf(lowercaseQuery) !== -1);
+            };
+        }
+
+        function getCurrentVersion() {
+            GitHub.setRepository($scope.global.repo.full_name);
+            GitHub.setBranch($scope.global.branch.name);
             GitHub.getCurrentVersion()
                 .then(function (currentVersion) {
                     $scope.currentVersion = currentVersion;
-                    that.onPreReleaseChange();
+                    $scope.onPreReleaseChange();
                 });
-        };
+        }
 
         $scope.onPreReleaseChange = function () {
             var currentVersion = $scope.currentVersion;
