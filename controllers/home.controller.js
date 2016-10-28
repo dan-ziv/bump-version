@@ -3,12 +3,12 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'Gi
 
         $scope.global.isAuthenticated = true;
         $scope.global.user = {name: User.getName(), avatar: User.getAvatar()};
-        $scope.loadingPage = true;
         $scope.repos = null;
         $scope.branches = null;
         $scope.loadingPage = false;
 
         $scope.loadRepositories = function () {
+            $scope.currentVersion = null;
             if (!$scope.repos) {
                 GitHub.getUserRepositories()
                     .then(function (repos) {
@@ -42,10 +42,15 @@ app.controller('homeController', ['$scope', '$timeout', '$location', 'User', 'Gi
             var nextRc = parts[2];
             if ($scope.global.prerelease) {
                 if (nextRc) {
-                    var rcParts = nextRc.split('rc');
-                    var nextRcVersion = rcParts[1];
-                    nextRcVersion++;
-                    $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
+                    if (nextRc.includes('rc')) {
+                        var rcParts = nextRc.split('rc');
+                        var nextRcVersion = rcParts[1];
+                        nextRcVersion++;
+                        $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
+                    } else {
+                        nextRc++;
+                        $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
+                    }
                 }
                 else {
                     nextRc = 'rc1';

@@ -90,30 +90,22 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             return _defaultSettingsFilePath;
         };
 
-        this.getCurrentBranch = function (currentVersion) {
-            return _getCurrentBranch(currentVersion, 1)
-                .then(function (branchName) {
-                    _branch = branchName || 'master';
-                    return _branch;
-                });
-        };
-
-        this.getAllBranches = function (from) {
-            var that = this;
-            return _doListBranches(from)
-                .then(function (branches) {
-                    if (branches.length > 0) {
-                        for (var i = 0; i < branches.length; i++) {
-                            var branch = branches[i];
-                            _branches.push(branch.name);
-                        }
-                        return that.getAllBranches(from + 1);
-                    }
-                    else {
-                        return _branches;
-                    }
-                });
-        };
+        // this.getAllBranches = function (from) {
+        //     var that = this;
+        //     return _doListBranches(from)
+        //         .then(function (branches) {
+        //             if (branches.length > 0) {
+        //                 for (var i = 0; i < branches.length; i++) {
+        //                     var branch = branches[i];
+        //                     _branches.push(branch.name);
+        //                 }
+        //                 return that.getAllBranches(from + 1);
+        //             }
+        //             else {
+        //                 return _branches;
+        //             }
+        //         });
+        // };
 
         this.getCommitsSinceLastRelease = function () {
             return _doGetCommits()
@@ -317,11 +309,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
                 "sha": contents.sha,
                 "branch": _branch
             }).then(function (response) {
-                // Update current version to db
-                return firebase.database().ref().update({'/version': nextVersion})
-                    .then(function () {
-                        deferred.resolve(response.data);
-                    });
+                deferred.resolve(response.data);
             }).catch(function (e) {
                 deferred.reject(e);
             });
