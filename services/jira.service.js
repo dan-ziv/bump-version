@@ -2,7 +2,7 @@ app.service('Jira', ['$http', '$q', function ($http, $q) {
 
     var _apiPrefix = 'https://kaltura.atlassian.net/rest/api';
     var _qaAssignee = 'alexs';
-    var _readyForQA = 'Ready for QA';
+    var _mergeStatus = 'Merge (Dev)';
 
     this.changeStatuses = function (issues) {
         var deferred = $q.defer();
@@ -112,7 +112,7 @@ app.service('Jira', ['$http', '$q', function ($http, $q) {
             .then(function (transitions) {
                 for (var i = 0; i < transitions.length; i++) {
                     var transition = transitions[i];
-                    if (transition.name === _readyForQA) {
+                    if (transition.name === _mergeStatus) {
                         return _doTransition(issue, transition.id);
                     }
                 }

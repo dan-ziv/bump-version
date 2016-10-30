@@ -80,19 +80,5 @@ app.service('Confluence', ['$http', '$q', function ($http, $q) {
 
         return deferred.promise;
     }
-
-    // this.getPageByTitle = function () {
-    //     var deferred = $q.defer();
-    //
-    //     $http.get(_apiPrefix + "/content/?title=HTML5 v2.49.rc9&spaceKey=FEC&expand=body.storage")
-    //         .then(function (response) {
-    //             deferred.resolve(response.data);
-    //         })
-    //         .catch(function (e) {
-    //             deferred.reject(e);
-    //         });
-    //
-    //     return deferred.promise;
-    // };
 }]);
 

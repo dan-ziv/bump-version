@@ -20,13 +20,14 @@
                 <input ng-model="pageData.subTitle">
             </md-input-container>
 
-            <label>Version Summary</label><br>
+            <label><b>Version Summary</b></label><br>
             <div layout="row">
                 <div flex>
                     <md-checkbox ng-model="pageData.versionSummary.content" aria-label="Content">Content</md-checkbox>
                 </div>
                 <div flex>
-                    <md-checkbox ng-model="pageData.versionSummary.fixedBugs" aria-label="Fixed Bugs">Fixed Bugs</md-checkbox>
+                    <md-checkbox ng-model="pageData.versionSummary.fixedBugs" aria-label="Fixed Bugs">Fixed Bugs
+                    </md-checkbox>
                 </div>
                 <div flex>
                     <md-checkbox ng-model="pageData.versionSummary.newFeatures" aria-label="New Features">New Features
@@ -37,25 +38,26 @@
             <md-divider></md-divider>
             <br>
 
-            <label>Fixed Bugs and New features</label><br>
-            <md-chips ng-model="pageData.issues.withJiraTicket"></md-chips>
-            <md-chips ng-model="pageData.issues.withOutJiraTicket"></md-chips>
+            <label><b>Fixed Bugs and New features</b></label><br>
+            <span>JIRA Tickets: <md-chips ng-model="pageData.issues.withJiraTicket"></md-chips></span>
+            <br>
+            <span>Others: <md-chips ng-model="pageData.issues.withOutJiraTicket"></md-chips></span>
 
             <md-divider></md-divider>
             <br>
 
             <md-input-container>
-                <label>Important To Know</label>
+                <label><b>Important To Know</b></label>
                 <input ng-model="pageData.importantToKnow">
             </md-input-container>
 
             <md-input-container>
-                <label>Known Issues</label>
+                <label><b>Known Issues</b></label>
                 <input ng-model="pageData.knownIssues">
             </md-input-container>
 
             <md-input-container>
-                <label>Pre Sanity Tests</label>
+                <label><b>Pre Sanity Tests</b></label>
                 <input ng-model="pageData.preSanityTests">
             </md-input-container>
         </md-card-title-text>

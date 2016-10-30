@@ -52,14 +52,14 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
                     });
 
             } else if ($scope.btnTxt === "Next") {
-                $location.path('/change-statuses');
+                $location.path('/edit-tickets');
             } else if ($scope.btnTxt === "Close") {
                 window.close();
             }
         };
 
         $scope.skip = function () {
-            $location.path('/change-statuses');
+            $location.path('/edit-tickets');
         };
 
         $scope.back = function () {

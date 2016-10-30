@@ -26,6 +26,10 @@ var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute'])
                 .when('/release-notes-confluence', {
                     templateUrl: '4-release-notes-confluence.html',
                     controller: 'releaseNotesConfluenceController',
+                })
+                .when('/edit-tickets', {
+                    templateUrl: '5-edit-tickets.html',
+                    controller: 'editTicketsController',
                 });
         }]);
 

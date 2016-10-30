@@ -1,0 +1,32 @@
+<div ng-if="loadingPage">
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
+
+<div ng-if="!loadingPage">
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Edit JIRA Tickets</span>
+            <md-divider></md-divider>
+            <span class="md-subhead"><b>Tickets:</b> {{tickets}}</span>
+            <span class="md-subhead"><b>Move to:</b> {{status}}</span>
+            <span class="md-subhead"><b>Assign to:</b> {{qa}}</span>
+        </md-card-title-text>
+    </md-card-title>
+    <center>
+        <img ng-if="btnTxt === 'Finish'" height="32px;" width="32px;" src="../icons/success.ico">
+        <div ng-if="btnTxt === 'Close'">
+            <p>{{errMsg}}</p>
+            <img height="32px;" width="32px;" src="../icons/error.png">
+        </div>
+    </center>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <md-button class="md-raised md-warn" ng-click="onEditClicked()" ng-disabled="inEditProcess">{{btnTxt}}
+        </md-button>
+    </section>
+    <div layout="row">
+        <div flex><a ng-click="back()" href="">Back</a></div>
+        <div flex><a style="float: right;" ng-click="finish()" href="">Finish</a></div>
+    </div>
+</div>
