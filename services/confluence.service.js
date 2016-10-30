@@ -3,11 +3,12 @@ app.service('Confluence', ['$http', '$q', function ($http, $q) {
     var _apiPrefix = "https://kaltura.atlassian.net/wiki/rest/api";
     var _space = "FEC";
     var _playerV2PageID = "51119129";
+    var _sr = StorageRepresentation.getInstance();
 
     this.createPage = function (pageData) {
         return _getCurrentUser()
             .then(function (user) {
-                return _getDirectParentPage(_playerV2PageID, pageData.version, 0, 25)
+                return _getDirectParentPage(pageData.newVersion, 0, 25)
                     .then(function (directParent) {
                         return _createPage(directParent, user, pageData);
                     });
@@ -58,7 +59,6 @@ app.service('Confluence', ['$http', '$q', function ($http, $q) {
 
         $http.post(_apiPrefix + "/content", {
             "type": "page",
-            //Create a new page as a child of another page
             "ancestors": [{
                 "id": directParent.id
             }],
@@ -68,7 +68,7 @@ app.service('Confluence', ['$http', '$q', function ($http, $q) {
             },
             "body": {
                 "storage": {
-                    "value": "<p>This is a new page</p>",
+                    "value": _sr.getValue(user, pageData),
                     "representation": "storage"
                 }
             }
@@ -81,5 +81,18 @@ app.service('Confluence', ['$http', '$q', function ($http, $q) {
         return deferred.promise;
     }
 
+    // this.getPageByTitle = function () {
+    //     var deferred = $q.defer();
+    //
+    //     $http.get(_apiPrefix + "/content/?title=HTML5 v2.49.rc9&spaceKey=FEC&expand=body.storage")
+    //         .then(function (response) {
+    //             deferred.resolve(response.data);
+    //         })
+    //         .catch(function (e) {
+    //             deferred.reject(e);
+    //         });
+    //
+    //     return deferred.promise;
+    // };
 }]);
 
