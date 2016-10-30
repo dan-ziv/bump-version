@@ -21,7 +21,6 @@ app.controller('editTicketsController', ['$scope', '$location', '$timeout', 'Git
         })();
 
         $scope.onEditClicked = function () {
-            debugger;
             if ($scope.btnTxt === "Edit") {
                 $scope.btnTxt = "Editing...";
                 $scope.inTagProcess = true;
