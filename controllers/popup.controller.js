@@ -11,10 +11,6 @@ var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute'])
                     templateUrl: 'sign-in.html',
                     controller: 'signInController'
                 })
-                .when('/all-in-one', {
-                    templateUrl: 'all-in-one.html',
-                    controller: 'allInOneController'
-                })
                 .when('/commit', {
                     templateUrl: '1-commit.html',
                     controller: 'commitController'
