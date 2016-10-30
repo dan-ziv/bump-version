@@ -5,7 +5,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
         var _owner = null;
         var _repo = null;
         var _branch = null;
-        var _defaultSettingsFilePath = 'DefaultSettings.php';
+        var _defaultSettingsFilePath = 'includes/DefaultSettings.php';
         var _statuses = ["CLOSED", "READY FOR QA", "DEPLOYED"];
 
         this.getCurrentVersion = function () {
