@@ -1,5 +1,5 @@
-app.service('GitHub', ['$http', '$q', 'User', 'Jira',
-    function ($http, $q, User, Jira) {
+app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
+    function ($http, $q, User, Jira, linkHeaderParser) {
 
         var _apiPrefix = 'https://api.github.com';
         var _owner = null;
@@ -90,23 +90,6 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             return _defaultSettingsFilePath;
         };
 
-        // this.getAllBranches = function (from) {
-        //     var that = this;
-        //     return _doListBranches(from)
-        //         .then(function (branches) {
-        //             if (branches.length > 0) {
-        //                 for (var i = 0; i < branches.length; i++) {
-        //                     var branch = branches[i];
-        //                     _branches.push(branch.name);
-        //                 }
-        //                 return that.getAllBranches(from + 1);
-        //             }
-        //             else {
-        //                 return _branches;
-        //             }
-        //         });
-        // };
-
         this.getCommitsSinceLastRelease = function () {
             return _doGetCommits()
                 .then(function (commits) {
@@ -130,7 +113,32 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
         function _doGetRepositoryBranches(repo) {
             var deferred = $q.defer();
 
-            $http.get(_apiPrefix + '/repos/' + repo + '/branches?access_token=' + User.getOAuthToken() + '&per_page=1000')
+            $http.get(_apiPrefix + '/repos/' + repo + '/branches?access_token=' + User.getOAuthToken())
+                .then(function (response) {
+                    var pages = _getNumberOfPages(response.headers().link);
+                    var branches = [];
+                    var promises = [];
+                    for (var i = 1; i <= pages; i++) {
+                        promises.push(_doGetMultiRepositoryBranches(repo, i));
+                    }
+                    $q.all(promises).then(function (results) {
+                        for (var i = 0; i < results.length; i++) {
+                            branches = branches.concat(results[i]);
+                        }
+                        deferred.resolve(branches);
+                    });
+                })
+                .catch(function (e) {
+                    deferred.reject(e);
+                });
+
+            return deferred.promise;
+        }
+
+        function _doGetMultiRepositoryBranches(repo, page) {
+            var deferred = $q.defer();
+
+            $http.get(_apiPrefix + '/repos/' + repo + '/branches?access_token=' + User.getOAuthToken() + '&page=' + page)
                 .then(function (response) {
                     deferred.resolve(response.data);
                 })
@@ -145,7 +153,33 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             var deferred = $q.defer();
 
             $http.get(_apiPrefix + '/user/repos?access_token=' + User.getOAuthToken()
-                + '&affiliation=collaborator,organization_member&per_page=1000')
+                + '&affiliation=collaborator,organization_member')
+                .then(function (response) {
+                    var pages = _getNumberOfPages(response.headers().link);
+                    var repos = [];
+                    var promises = [];
+                    for (var i = 1; i <= pages; i++) {
+                        promises.push(_doGetMultiUserRepositories(i));
+                    }
+                    $q.all(promises).then(function (results) {
+                        for (var i = 0; i < results.length; i++) {
+                            repos = repos.concat(results[i]);
+                        }
+                        deferred.resolve(repos);
+                    });
+                })
+                .catch(function (e) {
+                    deferred.reject(e);
+                });
+
+            return deferred.promise;
+        }
+
+        function _doGetMultiUserRepositories(page) {
+            var deferred = $q.defer();
+
+            $http.get(_apiPrefix + '/user/repos?access_token=' + User.getOAuthToken()
+                + '&affiliation=collaborator,organization_member&page=' + page)
                 .then(function (response) {
                     deferred.resolve(response.data);
                 })
@@ -371,5 +405,10 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira',
             });
 
             return deferred.promise;
+        }
+
+        function _getNumberOfPages(header) {
+            var link = linkHeaderParser.parse(header);
+            return link.last.page;
         }
     }]);

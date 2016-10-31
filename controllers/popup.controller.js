@@ -1,5 +1,5 @@
 // Initialize Angular
-var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute'])
+var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute', 'ig.linkHeaderParser'])
     .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
@@ -36,7 +36,14 @@ var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute'])
 app.controller('popupController', ['$scope', '$location', '$timeout', 'User',
     function ($scope, $location, $timeout, User) {
 
-        $scope.global = {isAuthenticated: false, user: null, repo: null, branch: null, newVersion: null, prerelease: true};
+        $scope.global = {
+            isAuthenticated: false,
+            user: null,
+            repo: null,
+            branch: null,
+            newVersion: null,
+            prerelease: true
+        };
 
         $scope.onPopupShown = function () {
             User.hasToken().then(function (hasToken) {

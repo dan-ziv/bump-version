@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Bump Version!",
   "description": "This extension automate the release version flow for the Front End Core team",
-  "version": "1.0",
+  "version": "1.3",
   "browser_action": {
     "default_icon": "icons/bump-version-icon.png"
   },
@@ -11,6 +11,7 @@
       "js/background.js"
     ]
   },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuT2sQMGzybLAfPgQ3VGX1HXosW4MhMx0ppcguqBd5sKh1ppWH5iRKgCtKSA32D8c0/ACGPtTafwHxYSV/KPdHK8t0ztTifXNGuzrQM10G9TR5jJeF0E5u7N2LP5rWwFt3Si4eiTI/IzqC8KqW1nAn7ok3/omXLzmdi8Ar8Gk7b/7nJkQ0/i/sgcaiSjskUam0GwQh8sj1SMiBpM50TF6rwzBTmjIqNUCFGtNFZHvciA2JSZHE887o1b6efRvBR7H7DkoQECbDTNos8Mprv+1TaxgONobNBKNhCerkIEoatolaoWbM0faNQZRRm6EO55++mLAQpPregVLngqAyAxnCwIDAQAB",
   "permissions": [
     "identity",
     "activeTab",
@@ -18,6 +19,5 @@
     "https://*/*",
     "https://github.com/",
     "tabs"
-  ],
-  "content_security_policy": "script-src 'self' https://*.firebaseio.com https://www.gstatic.com; object-src 'self'"
+  ]
 }
