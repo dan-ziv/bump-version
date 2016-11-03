@@ -195,7 +195,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             if (jiras) {
                 for (var i = 0; i < jiras.length; i++) {
                     var jira = jiras[i];
-                    titles.push(jira.fields.summary);
+                    titles.push(jira.key + ' - ' + jira.fields.summary);
                 }
             }
             return titles;

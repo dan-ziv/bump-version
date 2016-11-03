@@ -3,6 +3,10 @@ var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute', 'ig.linkHea
     .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
+                // .when('/home', {
+                //     templateUrl: 'test.html',
+                //     controller: 'testController'
+                // })
                 .when('/home', {
                     templateUrl: 'home.html',
                     controller: 'homeController'
