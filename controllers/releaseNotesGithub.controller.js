@@ -43,10 +43,10 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
         };
 
         $scope.skip = function () {
-            $location.path('/release-notes-confluence');
+            $location.path('/edit-tickets');
         };
 
         $scope.back = function () {
-            $location.path('/tag-repo');
+            $location.path('/release-notes-confluence');
         };
     }]);

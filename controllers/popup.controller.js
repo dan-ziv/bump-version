@@ -24,11 +24,11 @@ var app = angular.module('releaseVersion', ['ngMaterial', 'ngRoute', 'ig.linkHea
                     controller: 'tagRepoController'
                 })
                 .when('/release-notes-github', {
-                    templateUrl: '3-release-notes-github.html',
+                    templateUrl: '4-release-notes-github.html',
                     controller: 'releaseNotesGitHubController',
                 })
                 .when('/release-notes-confluence', {
-                    templateUrl: '4-release-notes-confluence.html',
+                    templateUrl: '3-release-notes-confluence.html',
                     controller: 'releaseNotesConfluenceController',
                 })
                 .when('/edit-tickets', {

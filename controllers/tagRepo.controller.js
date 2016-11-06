@@ -29,7 +29,7 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', 'GitHub'
         };
 
         $scope.skip = function () {
-            $location.path('/release-notes-github');
+            $location.path('/release-notes-confluence');
         };
 
         $scope.back = function () {

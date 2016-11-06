@@ -59,10 +59,10 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
         };
 
         $scope.skip = function () {
-            $location.path('/edit-tickets');
+            $location.path('/release-notes-github');
         };
 
         $scope.back = function () {
-            $location.path('/release-notes-github');
+            $location.path('/tag-repo');
         };
     }]);

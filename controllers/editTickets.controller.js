@@ -48,6 +48,6 @@ app.controller('editTicketsController', ['$scope', '$location', '$timeout', 'Git
         };
 
         $scope.back = function () {
-            $location.path('/release-notes-confluence');
+            $location.path('/release-notes-github');
         };
     }]);
