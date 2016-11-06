@@ -108,26 +108,42 @@ app.controller('homeController', ['$scope', '$timeout', '$location', '$q', 'User
             var parts = currentVersion.split('.');
             var nextNum = parts[1];
             var nextRc = parts[2];
-            if ($scope.global.prerelease) {
-                if (nextRc) {
-                    if (nextRc.includes('rc')) {
-                        var rcParts = nextRc.split('rc');
-                        var nextRcVersion = rcParts[1];
-                        nextRcVersion++;
-                        $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
-                    } else {
-                        nextRc++;
+            if ($scope.global.branch.name.substring(0, 4) !== $scope.currentVersion.substring(0, 4)) {
+                nextNum++;
+                if ($scope.global.prerelease) {
+                    $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc1';
+                } else {
+                    $scope.global.newVersion = parts[0] + '.' + nextNum
+                }
+            }
+            else {
+                if ($scope.global.prerelease) {
+                    if (nextRc) {
+                        if (nextRc.includes('rc')) {
+                            var rcParts = nextRc.split('rc');
+                            var nextRcVersion = rcParts[1];
+                            nextRcVersion++;
+                            $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
+                        } else {
+                            nextRc++;
+                            $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
+                        }
+                    }
+                    else {
+                        nextRc = 'rc1';
+                        nextNum++;
                         $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
                     }
                 }
                 else {
-                    nextRc = 'rc1';
-                    nextNum++;
-                    $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
+                    if (!nextRc) {
+                        nextNum++;
+                        $scope.global.newVersion = parts[0] + '.' + nextNum;
+                    }
+                    else {
+                        $scope.global.newVersion = parts[0] + '.' + nextNum;
+                    }
                 }
-            }
-            else {
-                $scope.global.newVersion = parts[0] + '.' + nextNum;
             }
         };
 
