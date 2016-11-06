@@ -220,7 +220,10 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
                 }
                 else {
                     var lines = msg.split('\n');
-                    newRelease.withOutJiraTicket.push(lines[0]);
+                    var commitTitle = lines[0];
+                    if (_.indexOf(newRelease.withOutJiraTicket, commitTitle) === -1) {
+                        newRelease.withOutJiraTicket.push(commitTitle);
+                    }
                 }
             }
             return newRelease;
