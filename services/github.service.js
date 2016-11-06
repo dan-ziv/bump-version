@@ -6,7 +6,9 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
         var _repo = null;
         var _branch = null;
         var _defaultSettingsFilePath = 'includes/DefaultSettings.php';
+        // var _defaultSettingsFilePath = 'DefaultSettings.php';
         var _statuses = ["CLOSED", "READY FOR QA", "DEPLOYED"];
+        var _currentVersion = null;
 
         this.getCurrentVersion = function () {
             return _doGetFileContents()
@@ -17,7 +19,8 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
                         var line = lines[i];
                         if (line.startsWith("$wgMwEmbedVersion")) {
                             var parts = line.split('=');
-                            return _extractVersion(parts[1]);
+                            _currentVersion = _extractVersion(parts[1]);
+                            return _currentVersion;
                         }
                     }
                 });
@@ -96,7 +99,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
                     for (var i = 1; i < commits.length; i++) {
                         var commit = commits[i];
                         var msg = commit.commit.message.toLowerCase();
-                        if (msg.includes("bump")) {
+                        if (msg === "bump version to " + _currentVersion) {
                             return commits.slice(1, i);
                         }
                     }
@@ -408,6 +411,7 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
         }
 
         function _getNumberOfPages(header) {
+            if (!header) return 1;
             var link = linkHeaderParser.parse(header);
             return link.last.page;
         }
