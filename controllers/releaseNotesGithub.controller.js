@@ -36,7 +36,7 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
                         $scope.inCreatePageProcess = false;
                     });
             } else if ($scope.btnTxt === "Next") {
-                $location.path('/release-notes-confluence');
+                $location.path('/edit-tickets');
             } else if ($scope.btnTxt === "Close") {
                 window.close();
             }

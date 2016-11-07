@@ -52,7 +52,7 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
                     });
 
             } else if ($scope.btnTxt === "Next") {
-                $location.path('/edit-tickets');
+                $location.path('/release-notes-github');
             } else if ($scope.btnTxt === "Close") {
                 window.close();
             }

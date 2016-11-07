@@ -108,6 +108,8 @@ app.controller('homeController', ['$scope', '$timeout', '$location', '$q', 'User
             var parts = currentVersion.split('.');
             var nextNum = parts[1];
             var nextRc = parts[2];
+            // If version is different from the current branch
+            // For example: branch is 2.50 and current version is 2.49
             if ($scope.global.branch.name.substring(0, 4) !== $scope.currentVersion.substring(0, 4)) {
                 nextNum++;
                 if ($scope.global.prerelease) {
