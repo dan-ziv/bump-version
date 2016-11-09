@@ -34,8 +34,27 @@
                 </md-item-template>
             </md-autocomplete>
             <div ng-if="currentVersion">
-                <p class="md-body-2"><b> Current version: </b>{{currentVersion}}</p>
-                <p class="md-body-2"><b>Next version: </b><span style="color: red"> {{global.newVersion}}</span></p>
+                <p class="md-body-2"><b> Current version: </b> <span style="color: red;">{{currentVersion}}</span></p>
+                <p class="md-body-2"><b>Next version: </b></p>
+
+                <md-radio-group ng-model="newVersionType" ng-change="onVersionTypeChanged()">
+                    <md-radio-button value="Auto" class="md-primary">Auto Detect</md-radio-button>
+                    <md-radio-button value="Manual" class="md-primary">Insert Manually</md-radio-button>
+                </md-radio-group>
+
+                <p class="md-body-2" ng-if="newVersionType === 'Auto' " style="font-size: 20px;">
+                    <span style="font-size: 12px;" ng-if="detecting">Detecting...</span>
+                    <b ng-if="!detecting">{{global.newVersion}}</b>
+                    <br>
+                </p>
+
+                <p ng-if="newVersionType === 'Manual' ">
+                    <md-input-container class="md-body-2">
+                        <input style="font-size: 20px;" type="text" placeholder="e.g. 2.XX.rcX"
+                               ng-model="global.newVersion">
+                    </md-input-container>
+                </p>
+
                 <md-checkbox class="md-body-2" style="font-style: italic;" ng-model="global.prerelease"
                              ng-change="onPreReleaseChange()">
                     This is a pre-release

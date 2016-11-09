@@ -99,52 +99,50 @@ app.controller('homeController', ['$scope', '$timeout', '$location', '$q', 'User
             GitHub.getCurrentVersion()
                 .then(function (currentVersion) {
                     $scope.currentVersion = currentVersion;
-                    $scope.onPreReleaseChange();
                 });
         }
+
+        $scope.onVersionTypeChanged = function () {
+            if (this.newVersionType === "Auto") {
+                var that = this;
+                that.detecting = true;
+                $timeout(function () {
+                    that.onPreReleaseChange();
+                    that.detecting = false;
+                }, 400);
+            }
+        };
 
         $scope.onPreReleaseChange = function () {
             var currentVersion = $scope.currentVersion;
             var parts = currentVersion.split('.');
             var nextNum = parts[1];
             var nextRc = parts[2];
-            // If version is different from the current branch
-            // For example: branch is 2.50 and current version is 2.49
-            if ($scope.global.branch.name.substring(0, 4) !== $scope.currentVersion.substring(0, 4)) {
-                nextNum++;
-                if ($scope.global.prerelease) {
-                    $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc1';
-                } else {
-                    $scope.global.newVersion = parts[0] + '.' + nextNum
-                }
-            }
-            else {
-                if ($scope.global.prerelease) {
-                    if (nextRc) {
-                        if (nextRc.includes('rc')) {
-                            var rcParts = nextRc.split('rc');
-                            var nextRcVersion = rcParts[1];
-                            nextRcVersion++;
-                            $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
-                        } else {
-                            nextRc++;
-                            $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
-                        }
-                    }
-                    else {
-                        nextRc = 'rc1';
-                        nextNum++;
+            if ($scope.global.prerelease) {
+                if (nextRc) {
+                    if (nextRc.includes('rc')) {
+                        var rcParts = nextRc.split('rc');
+                        var nextRcVersion = rcParts[1];
+                        nextRcVersion++;
+                        $scope.global.newVersion = parts[0] + '.' + nextNum + '.rc' + nextRcVersion;
+                    } else {
+                        nextRc++;
                         $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
                     }
                 }
                 else {
-                    if (!nextRc) {
-                        nextNum++;
-                        $scope.global.newVersion = parts[0] + '.' + nextNum;
-                    }
-                    else {
-                        $scope.global.newVersion = parts[0] + '.' + nextNum;
-                    }
+                    nextRc = 'rc1';
+                    nextNum++;
+                    $scope.global.newVersion = parts[0] + '.' + nextNum + '.' + nextRc;
+                }
+            }
+            else {
+                if (!nextRc) {
+                    nextNum++;
+                    $scope.global.newVersion = parts[0] + '.' + nextNum;
+                }
+                else {
+                    $scope.global.newVersion = parts[0] + '.' + nextNum;
                 }
             }
         };
