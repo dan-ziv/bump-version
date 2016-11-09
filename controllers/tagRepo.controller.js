@@ -22,7 +22,7 @@ app.controller('tagRepoController', ['$scope', '$location', '$timeout', 'GitHub'
                         $scope.inTagProcess = false;
                     });
             } else if ($scope.btnTxt === "Next") {
-                $location.path('/release-notes-github');
+                $location.path('/release-notes-confluence');
             } else if ($scope.btnTxt === "Close") {
                 window.close();
             }
