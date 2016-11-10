@@ -144,6 +144,8 @@ app.controller('homeController', ['$scope', '$timeout', '$location', '$q', 'User
                 else {
                     $scope.global.newVersion = parts[0] + '.' + nextNum;
                 }
+                nextNum--;
+                $scope.global.lastOfficialVersion = parts[0] + '.' + nextNum;
             }
         };
 

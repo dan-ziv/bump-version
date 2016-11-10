@@ -65,15 +65,15 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             return _doCreateReleaseNotes(tag, body, prerelease);
         };
 
-        this.getNewReleaseCommitsSplitted = function () {
-            return this.getCommitsSinceLastRelease()
+        this.getNewReleaseCommitsSplitted = function (releaseInfo) {
+            return this.getCommitsSinceLastRelease(releaseInfo)
                 .then(function (commits) {
                     return _splitToJiraAndNonJira(commits);
                 });
         };
 
-        this.getNewReleaseCommitsUnified = function () {
-            return this.getCommitsSinceLastRelease()
+        this.getNewReleaseCommitsUnified = function (releaseInfo) {
+            return this.getCommitsSinceLastRelease(releaseInfo)
                 .then(function (commits) {
                     var newRelease = _splitToJiraAndNonJira(commits);
                     if (newRelease.withJiraTicket.length > 0) {
@@ -93,17 +93,35 @@ app.service('GitHub', ['$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             return _defaultSettingsFilePath;
         };
 
-        this.getCommitsSinceLastRelease = function () {
+        this.getCommitsSinceLastRelease = function (releaseInfo) {
+            // TODO: get all commits - this is gets now only the first 30
             return _doGetCommits()
                 .then(function (commits) {
-                    for (var i = 1; i < commits.length; i++) {
-                        var commit = commits[i];
-                        var msg = commit.commit.message.toLowerCase();
-                        if (msg === "bump version to " + _currentVersion) {
-                            return commits.slice(1, i);
+                    var i, msg, commit, bumpVersionPrefix = "bump version to ";
+                    if (releaseInfo.prerelease) {
+                        for (i = 1; i < commits.length; i++) {
+                            commit = commits[i];
+                            msg = commit.commit.message.toLowerCase();
+                            if (msg === bumpVersionPrefix + _currentVersion) {
+                                return commits.slice(1, i);
+                            }
                         }
+                        return [];
                     }
-                    return [];
+                    else {
+                        var allReleaseCommits = [];
+                        for (i = 0; i < commits.length; i++) {
+                            commit = commits[i];
+                            msg = commit.commit.message.toLowerCase();
+                            if (msg === bumpVersionPrefix + releaseInfo.lastOfficialVersion) {
+                                return allReleaseCommits;
+                            }
+                            else if (!msg.includes(bumpVersionPrefix)) {
+                                allReleaseCommits.push(commit);
+                            }
+                        }
+                        return [];
+                    }
                 });
         };
 

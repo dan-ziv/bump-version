@@ -18,7 +18,11 @@ app.controller('releaseNotesConfluenceController', ['$scope', '$location', '$tim
         };
 
         (function () {
-            GitHub.getNewReleaseCommitsSplitted()
+            var releaseInfo = {
+                prerelease: $scope.global.prerelease,
+                lastOfficialVersion: $scope.global.lastOfficialVersion
+            };
+            GitHub.getNewReleaseCommitsSplitted(releaseInfo)
                 .then(function (commits) {
                     $scope.pageData.issues.withJiraTicket = commits.withJiraTicket;
                     $scope.pageData.issues.withOutJiraTicket = commits.withOutJiraTicket;

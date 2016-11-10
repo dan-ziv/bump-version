@@ -7,7 +7,11 @@ app.controller('releaseNotesGitHubController', ['$scope', '$location', '$timeout
         $scope.title = 'v' + $scope.global.newVersion;
 
         (function () {
-            GitHub.getNewReleaseCommitsUnified()
+            var releaseInfo = {
+                prerelease: $scope.global.prerelease,
+                lastOfficialVersion: $scope.global.lastOfficialVersion
+            };
+            GitHub.getNewReleaseCommitsUnified(releaseInfo)
                 .then(function (commits) {
                     $scope.commits = commits;
                 })
