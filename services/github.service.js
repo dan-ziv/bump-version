@@ -258,7 +258,7 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             for ( var i = 0; i < commits.length; i++ ) {
                 var commit = commits[ i ];
                 var msg = commit.commit.message;
-                var regexp = /[A-Z]{3}-[0-9]{4}/g;
+                var regexp = /[A-Z]{3}-[0-9]{4,5}/g;
                 var keys_results = msg.match( regexp );
                 if ( keys_results && keys_results.length ) {
                     for ( var j = 0; j < keys_results.length; j++ ) {
