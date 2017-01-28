@@ -1,5 +1,5 @@
-app.controller('editTicketsController', ['$scope', '$location', '$timeout', 'GitHub', 'Jira',
-    function ($scope, $location, $timeout, GitHub, Jira) {
+app.controller( 'editTicketsController', [ '$scope', '$location', '$timeout', 'GitHub', 'Jira',
+    function ( $scope, $location, $timeout, GitHub, Jira ) {
 
         $scope.btnTxt = "Edit";
         $scope.inEditProcess = false;
@@ -8,36 +8,40 @@ app.controller('editTicketsController', ['$scope', '$location', '$timeout', 'Git
         var tickets_array = null;
 
         (function () {
-            GitHub.getNewReleaseCommitsSplitted()
-                .then(function (commits) {
+            var releaseInfo = {
+                prerelease: $scope.global.prerelease,
+                lastOfficialVersion: $scope.global.lastOfficialVersion
+            };
+            GitHub.getNewReleaseCommitsSplitted( releaseInfo )
+                .then( function ( commits ) {
                     tickets_array = commits.withJiraTicket;
                     $scope.tickets = tickets_array.join();
-                })
-                .catch(function (e) {
-                })
-                .finally(function () {
+                } )
+                .catch( function ( e ) {
+                } )
+                .finally( function () {
                     $scope.loadingPage = false;
-                });
+                } );
         })();
 
         $scope.onEditClicked = function () {
-            if ($scope.btnTxt === "Edit") {
+            if ( $scope.btnTxt === "Edit" ) {
                 $scope.btnTxt = "Editing...";
                 $scope.inTagProcess = true;
-                Jira.changeAssignee(tickets_array)
-                    .then(function () {
-                        Jira.changeStatuses(tickets_array)
-                    })
-                    .then(function () {
+                Jira.changeAssignee( tickets_array )
+                    .then( function () {
+                        Jira.changeStatuses( tickets_array )
+                    } )
+                    .then( function () {
                         $scope.btnTxt = "Finish";
-                    })
-                    .catch(function (e) {
+                    } )
+                    .catch( function ( e ) {
                         $scope.btnTxt = "Close";
                         $scope.errMsg = e.data.message;
-                    })
-                    .finally(function () {
+                    } )
+                    .finally( function () {
                         $scope.inEditProcess = false;
-                    });
+                    } );
             } else {
                 window.close();
             }
@@ -48,6 +52,6 @@ app.controller('editTicketsController', ['$scope', '$location', '$timeout', 'Git
         };
 
         $scope.back = function () {
-            $location.path('/release-notes-github');
+            $location.path( '/release-notes-github' );
         };
-    }]);
+    } ] );

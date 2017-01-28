@@ -73,6 +73,7 @@ var StorageRepresentation = (function () {
             '</ac:link>, <ac:link><ri:user ri:userkey="ff8080813fbbeb41013fbbebdbcc00ad" /></ac:link> <ac:link><ri:user ri:userkey="ff8080813fbbeb41013fbbebdb580051" />' +
             '</ac:link>, <ac:link><ri:user ri:userkey="ff80808153347cbf0153376dc8a20004" /></ac:link>, <ac:link><ri:user ri:userkey="ff808081529a62670152a135b2820004" />' +
             '</ac:link> <ac:link><ri:user ri:userkey="ff808081565289c801566531cbba0002" /></ac:link> <ac:link><ri:user ri:userkey="ff80808156ecfe590156fe3dcc040002" />' +
+            '</ac:link> <ac:link><ri:user ri:userkey="ff8080815971003d0159825c259a0004" /></ac:link> <ac:link><ri:user ri:userkey="ff8080815971003d0159825c259a0004" />' +
             '</ac:link></p></div></td></tr></tbody></table><p class="auto-cursor-target"><br /></p><p><br /></p></ac:rich-text-body></ac:structured-macro>' +
             '</ac:rich-text-body></ac:structured-macro></ac:layout-cell></ac:layout-section><ac:layout-section ac:type="single"><ac:layout-cell>' +
             '<ac:structured-macro ac:name="panel" ac:schema-version="1" ac:macro-id="33b9a885-3002-4138-bab2-a6dc3e338cb0"><ac:parameter ac:name="bgColor">' +
