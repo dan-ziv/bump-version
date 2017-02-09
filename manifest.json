@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Bump Version!",
   "description": "This extension automate the release version flow for the Front End Core team",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "browser_action": {
     "default_icon": "icons/bump-version-icon.png"
   },
