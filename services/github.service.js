@@ -85,37 +85,30 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
                 _nonJiraTickets = null;
                 return $q.resolve( newRelease );
             } else {
-                return this.getCommitsSinceLastRelease( releaseInfo )
-                    .then( function ( commits ) {
-                        return _splitToJiraAndNonJira( commits );
-                    } );
+                return this.getCommitsSinceLastRelease( releaseInfo ).then( function ( commits ) {
+                    return _splitToJiraAndNonJira( commits );
+                } );
             }
         };
 
         this.getNewReleaseCommitsUnified = function ( releaseInfo ) {
             if ( _jiraTickets !== null && _nonJiraTickets !== null ) {
-                if ( _jiraTickets.length > 0 ) {
-                    return Jira.getIssues( _jiraTickets )
-                        .then( function ( jiras ) {
-                            var titles = _extractTitlesFromJira( jiras );
-                            return titles.concat( _nonJiraTickets );
-                        } );
-                }
+                return Jira.getIssues( _jiraTickets ).then( function ( jiras ) {
+                    var titles = _extractTitlesFromJira( jiras );
+                    return titles.concat( _nonJiraTickets );
+                } );
             } else {
-                return this.getCommitsSinceLastRelease( releaseInfo )
-                    .then( function ( commits ) {
-                        var newRelease = _splitToJiraAndNonJira( commits );
-                        if ( newRelease.withJiraTicket.length > 0 ) {
-                            return Jira.getIssues( newRelease.withJiraTicket )
-                                .then( function ( jiras ) {
-                                    var titles = _extractTitlesFromJira( jiras );
-                                    return titles.concat( newRelease.withOutJiraTicket );
-                                } );
-                        }
-                        else {
-                            return newRelease.withOutJiraTicket;
-                        }
-                    } );
+                return this.getCommitsSinceLastRelease( releaseInfo ).then( function ( commits ) {
+                    var newRelease = _splitToJiraAndNonJira( commits );
+                    if ( newRelease.withJiraTicket.length > 0 ) {
+                        return Jira.getIssues( newRelease.withJiraTicket ).then( function ( jiras ) {
+                            var titles = _extractTitlesFromJira( jiras );
+                            return titles.concat( newRelease.withOutJiraTicket );
+                        } );
+                    } else {
+                        return newRelease.withOutJiraTicket;
+                    }
+                } );
             }
         };
 
@@ -166,23 +159,23 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             var deferred = $q.defer();
 
             $http.get( _apiPrefix + '/repos/' + repo + '/branches?access_token=' + User.getOAuthToken() )
-                .then( function ( response ) {
-                    var pages = _getNumberOfPages( response.headers().link );
-                    var branches = [];
-                    var promises = [];
-                    for ( var i = 1; i <= pages; i++ ) {
-                        promises.push( _doGetMultiRepositoryBranches( repo, i ) );
-                    }
-                    $q.all( promises ).then( function ( results ) {
-                        for ( var i = 0; i < results.length; i++ ) {
-                            branches = branches.concat( results[ i ] );
-                        }
-                        deferred.resolve( branches );
-                    } );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     var pages = _getNumberOfPages( response.headers().link );
+                     var branches = [];
+                     var promises = [];
+                     for ( var i = 1; i <= pages; i++ ) {
+                         promises.push( _doGetMultiRepositoryBranches( repo, i ) );
+                     }
+                     $q.all( promises ).then( function ( results ) {
+                         for ( var i = 0; i < results.length; i++ ) {
+                             branches = branches.concat( results[ i ] );
+                         }
+                         deferred.resolve( branches );
+                     } );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
@@ -191,12 +184,12 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             var deferred = $q.defer();
 
             $http.get( _apiPrefix + '/repos/' + repo + '/branches?access_token=' + User.getOAuthToken() + '&page=' + page )
-                .then( function ( response ) {
-                    deferred.resolve( response.data );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     deferred.resolve( response.data );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
@@ -206,23 +199,23 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
 
             $http.get( _apiPrefix + '/user/repos?access_token=' + User.getOAuthToken()
                 + '&affiliation=collaborator,organization_member' )
-                .then( function ( response ) {
-                    var pages = _getNumberOfPages( response.headers().link );
-                    var repos = [];
-                    var promises = [];
-                    for ( var i = 1; i <= pages; i++ ) {
-                        promises.push( _doGetMultiUserRepositories( i ) );
-                    }
-                    $q.all( promises ).then( function ( results ) {
-                        for ( var i = 0; i < results.length; i++ ) {
-                            repos = repos.concat( results[ i ] );
-                        }
-                        deferred.resolve( repos );
-                    } );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     var pages = _getNumberOfPages( response.headers().link );
+                     var repos = [];
+                     var promises = [];
+                     for ( var i = 1; i <= pages; i++ ) {
+                         promises.push( _doGetMultiUserRepositories( i ) );
+                     }
+                     $q.all( promises ).then( function ( results ) {
+                         for ( var i = 0; i < results.length; i++ ) {
+                             repos = repos.concat( results[ i ] );
+                         }
+                         deferred.resolve( repos );
+                     } );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
@@ -232,12 +225,12 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
 
             $http.get( _apiPrefix + '/user/repos?access_token=' + User.getOAuthToken()
                 + '&affiliation=collaborator,organization_member&page=' + page )
-                .then( function ( response ) {
-                    deferred.resolve( response.data );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     deferred.resolve( response.data );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
@@ -302,12 +295,12 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             var deferred = $q.defer();
 
             $http.get( _apiPrefix + '/repos/' + _owner + '/' + _repo + '/branches?page=' + page )
-                .then( function ( response ) {
-                    deferred.resolve( response.data );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     deferred.resolve( response.data );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
@@ -345,12 +338,12 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             var deferred = $q.defer();
 
             $http.get( _apiPrefix + '/repos/' + _owner + '/' + _repo + '/commits?sha=' + _branch )
-                .then( function ( response ) {
-                    deferred.resolve( response.data );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     deferred.resolve( response.data );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
@@ -378,12 +371,12 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             var deferred = $q.defer();
 
             $http.get( _apiPrefix + '/repos/' + _owner + '/' + _repo + '/contents/' + _defaultSettingsFilePath + '?ref=' + _branch )
-                .then( function ( response ) {
-                    deferred.resolve( { sha: response.data.sha, content: atob( response.data.content ) } );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     deferred.resolve( { sha: response.data.sha, content: atob( response.data.content ) } );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
@@ -420,12 +413,12 @@ app.service( 'GitHub', [ '$http', '$q', 'User', 'Jira', 'linkHeaderParser',
             var deferred = $q.defer();
 
             $http.get( _apiPrefix + '/repos/' + _owner + '/' + _repo + '/git/refs/heads/' + _branch )
-                .then( function ( response ) {
-                    deferred.resolve( response.data );
-                } )
-                .catch( function ( e ) {
-                    deferred.reject( e );
-                } );
+                 .then( function ( response ) {
+                     deferred.resolve( response.data );
+                 } )
+                 .catch( function ( e ) {
+                     deferred.reject( e );
+                 } );
 
             return deferred.promise;
         }
